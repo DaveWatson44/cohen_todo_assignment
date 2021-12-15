@@ -1,0 +1,44 @@
+version: "3.8"
+services: 
+    client:
+        build:
+            context: ./client
+            dockerfile: Dockerfile
+        volumes: 
+            - ./client:/app
+        ports: 
+            - "8080:8080"
+        networks: 
+            - todolist
+    server:
+        build: 
+            context: ./server
+            dockerfile: Dockerfile
+        volumes: 
+            - ./server:/app
+        ports: 
+            - "3000:3000"
+        networks: 
+            - todolist
+        depends_on: 
+            - "db"
+    db:
+        build:
+            context: ./postgres
+            dockerfile: Dockerfile
+        environment:
+            POSTGRES_PASSWORD: password
+            POSTGRES_DB: todolist
+        volumes:
+            - ./postgres:/docker-entrypoint-initdb.d/    
+        ports: 
+           - "5432:5432"
+        networks: 
+            - todolist
+networks: 
+    todolist: 
+        name: todolist
+        driver: bridge
+        driver_opts:
+          com.docker.network.bridge.name: todolist
+        
