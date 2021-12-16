@@ -21,16 +21,16 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
--- Name: projects; Type: TABLE; Schema: public; Owner: postgres
+-- Name: todo_lists; Type: TABLE; Schema: public; Owner: postgres
 --
 
-CREATE TABLE public.projects (
+CREATE TABLE public.todo_lists (
     id integer NOT NULL,
     name character varying(255) NOT NULL
 );
 
 
-ALTER TABLE public.projects OWNER TO postgres;
+ALTER TABLE public.todo_lists OWNER TO postgres;
 
 --
 -- Name: projects_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -51,7 +51,7 @@ ALTER TABLE public.projects_id_seq OWNER TO postgres;
 -- Name: projects_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
-ALTER SEQUENCE public.projects_id_seq OWNED BY public.projects.id;
+ALTER SEQUENCE public.projects_id_seq OWNED BY public.todo_lists.id;
 
 
 --
@@ -71,60 +71,10 @@ CREATE TABLE public.tasks (
 ALTER TABLE public.tasks OWNER TO postgres;
 
 --
--- Name: todo_list; Type: TABLE; Schema: public; Owner: postgres
+-- Name: todo_lists id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
-CREATE TABLE public.todo_list (
-    id integer NOT NULL,
-    project_id integer NOT NULL,
-    name character varying(255) NOT NULL
-);
-
-
-ALTER TABLE public.todo_list OWNER TO postgres;
-
---
--- Name: todo_list_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE public.todo_list_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.todo_list_id_seq OWNER TO postgres;
-
---
--- Name: todo_list_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE public.todo_list_id_seq OWNED BY public.todo_list.id;
-
-
---
--- Name: projects id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.projects ALTER COLUMN id SET DEFAULT nextval('public.projects_id_seq'::regclass);
-
-
---
--- Name: todo_list id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.todo_list ALTER COLUMN id SET DEFAULT nextval('public.todo_list_id_seq'::regclass);
-
-
---
--- Data for Name: projects; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-COPY public.projects (id, name) FROM stdin;
-\.
+ALTER TABLE ONLY public.todo_lists ALTER COLUMN id SET DEFAULT nextval('public.projects_id_seq'::regclass);
 
 
 --
@@ -136,10 +86,10 @@ COPY public.tasks (id, todo_list_id, description, due_date, priority, is_complet
 
 
 --
--- Data for Name: todo_list; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: todo_lists; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.todo_list (id, project_id, name) FROM stdin;
+COPY public.todo_lists (id, name) FROM stdin;
 \.
 
 
@@ -147,29 +97,22 @@ COPY public.todo_list (id, project_id, name) FROM stdin;
 -- Name: projects_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.projects_id_seq', 22, true);
+SELECT pg_catalog.setval('public.projects_id_seq', 26, true);
 
 
 --
--- Name: todo_list_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+-- Name: todo_lists name; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.todo_list_id_seq', 1, false);
-
-
---
--- Name: projects name; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.projects
+ALTER TABLE ONLY public.todo_lists
     ADD CONSTRAINT name UNIQUE (name);
 
 
 --
--- Name: projects projects_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: todo_lists projects_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public.projects
+ALTER TABLE ONLY public.todo_lists
     ADD CONSTRAINT projects_pkey PRIMARY KEY (id);
 
 
@@ -179,14 +122,6 @@ ALTER TABLE ONLY public.projects
 
 ALTER TABLE ONLY public.tasks
     ADD CONSTRAINT tasks_pkey PRIMARY KEY (id);
-
-
---
--- Name: todo_list todo_list_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.todo_list
-    ADD CONSTRAINT todo_list_pkey PRIMARY KEY (id);
 
 
 --
