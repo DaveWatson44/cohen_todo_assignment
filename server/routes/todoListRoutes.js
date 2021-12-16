@@ -1,17 +1,17 @@
 const express = require('express');
-const app = express();
 const router = express.Router();
 const query = require('../db/postgresquery');
-const { createProjectSQL, getProjectsSQL } = require('../utils/todoListQueries');
+const { createTodoListsSQL, getTodoListsSQL } = require('../utils/todoListQueries');
 
 router.get('/todo_lists', async (req, res, next) => {
-	const sql = getProjectsSQL();
+	const sql = getTodoListsSQL();
 	let message = "There was an error retrieving the records.";
 
 	try {
 		const results = await query.query(sql)
-
-		res.status(200).send(results.rows);
+        const todoLists = results.rows;
+        
+		res.status(200).send(todoLists);
 	} catch(err) {
 		console.log(err)
 		res.status(400).send({
@@ -21,7 +21,7 @@ router.get('/todo_lists', async (req, res, next) => {
 });
 
 router.post('/todo_lists', async (req, res, next) => {
-	const sql = createProjectSQL();
+	const sql = createTodoListsSQL();
 	const values = [req.body.name]
 	let message = '';
 

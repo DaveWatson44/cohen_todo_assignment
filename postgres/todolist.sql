@@ -61,6 +61,7 @@ ALTER SEQUENCE public.projects_id_seq OWNED BY public.todo_lists.id;
 CREATE TABLE public.tasks (
     id integer NOT NULL,
     todo_list_id integer NOT NULL,
+    name character varying(255) NOT NULL,
     description character varying(255) NOT NULL,
     due_date date NOT NULL,
     priority character varying(50) NOT NULL,
@@ -69,6 +70,35 @@ CREATE TABLE public.tasks (
 
 
 ALTER TABLE public.tasks OWNER TO postgres;
+
+--
+-- Name: tasks_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.tasks_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.tasks_id_seq OWNER TO postgres;
+
+--
+-- Name: tasks_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.tasks_id_seq OWNED BY public.tasks.id;
+
+
+--
+-- Name: tasks id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.tasks ALTER COLUMN id SET DEFAULT nextval('public.tasks_id_seq'::regclass);
+
 
 --
 -- Name: todo_lists id; Type: DEFAULT; Schema: public; Owner: postgres
@@ -81,7 +111,8 @@ ALTER TABLE ONLY public.todo_lists ALTER COLUMN id SET DEFAULT nextval('public.p
 -- Data for Name: tasks; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.tasks (id, todo_list_id, description, due_date, priority, is_completed) FROM stdin;
+COPY public.tasks (id, todo_list_id, name, description, due_date, priority, is_completed) FROM stdin;
+1	27	task1	test description	2021-12-25	high	f
 \.
 
 
@@ -90,6 +121,7 @@ COPY public.tasks (id, todo_list_id, description, due_date, priority, is_complet
 --
 
 COPY public.todo_lists (id, name) FROM stdin;
+27	test
 \.
 
 
@@ -97,7 +129,14 @@ COPY public.todo_lists (id, name) FROM stdin;
 -- Name: projects_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.projects_id_seq', 26, true);
+SELECT pg_catalog.setval('public.projects_id_seq', 27, true);
+
+
+--
+-- Name: tasks_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.tasks_id_seq', 1, true);
 
 
 --
@@ -117,11 +156,11 @@ ALTER TABLE ONLY public.todo_lists
 
 
 --
--- Name: tasks tasks_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: tasks todo_list_id; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.tasks
-    ADD CONSTRAINT tasks_pkey PRIMARY KEY (id);
+    ADD CONSTRAINT todo_list_id FOREIGN KEY (todo_list_id) REFERENCES public.todo_lists(id) ON DELETE RESTRICT;
 
 
 --

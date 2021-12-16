@@ -1,10 +1,10 @@
 module.exports = {
 
-    getProjectsSQL: function(){
+    getTodoListsSQL: function(){
         return 'SELECT * FROM todo_lists'
     },
 
-    createProjectSQL: function(){
+    createTodoListsSQL: function(){
         return 'INSERT INTO todo_lists (name) VALUES ($1)'
     },
 
