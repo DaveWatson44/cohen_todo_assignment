@@ -5,10 +5,11 @@ const { createTaskSQL, getTasksSQL, updateTaskSQL, deleteTaskSQL } = require('..
 
 router.get('/tasks', async (req, res, next) => {
 	const sql = getTasksSQL();
+	const values = [req.query.todoListId]
 	let message = "There was an error retrieving the records.";
 
 	try {
-		const results = await query.query(sql)
+		const results = await query.query(sql, values)
         const tasks = results.rows;
 
 		res.status(200).send(tasks);

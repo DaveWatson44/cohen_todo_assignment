@@ -1,7 +1,7 @@
 module.exports = {
 
     getTasksSQL: function(){
-        return 'SELECT * FROM tasks'
+        return 'SELECT * FROM tasks WHERE todo_list_id = $1'
     },
 
     createTaskSQL: function(){

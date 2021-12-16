@@ -1,6 +1,6 @@
 <template>
   <div>
-    <todo-list :todos="todos"></todo-list>
+    <todo-list v-for="(todoList, index) in todos" :key="index" :todoList="todoList"></todo-list>
   </div>
 </template>
 
@@ -11,6 +11,7 @@ export default {
 
   mounted() {
     this.getTodos();
+ 
   },
 
   data() {
@@ -24,10 +25,15 @@ export default {
       this.$axios
         .get("/todo_lists")
         .then((resp) => {
+          this.todos = resp.data;
           console.log(resp.data)
         })
-        .catch();
+        .catch((err) => {
+          console.log(err)
+        });
     },
+
+ 
   },
 };
 </script>
