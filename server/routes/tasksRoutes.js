@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const query = require('../db/postgresquery');
-const { createTaskSQL, getTasksSQL, updateTaskSQL } = require('../utils/tasksQueries');
+const { createTaskSQL, getTasksSQL, updateTaskSQL, deleteTaskSQL } = require('../utils/tasksQueries');
 
 router.get('/tasks', async (req, res, next) => {
 	const sql = getTasksSQL();
@@ -39,10 +39,9 @@ router.post('/tasks', async (req, res, next) => {
 });
 
 router.put('/tasks', async (req, res, next) => {
-    const updateData = req.body.updateData;
-    const taskId = req.body.id;
+    const updateData = req.body;
     const values = [];
-    const sql = updateTaskSQL(updateData, taskId);
+    const sql = updateTaskSQL(updateData);
     let message = '';
 
     for(val in updateData){
@@ -56,6 +55,23 @@ router.put('/tasks', async (req, res, next) => {
 		res.status(200).send({message: message});
 	} catch(err) {
 		message = "There was an error editing the record.";
+		console.log(err)
+		res.status(400).send({
+			message: message
+		})
+	};
+});
+
+router.delete('/tasks', async (req, res, next) => {
+    const sql = deleteTaskSQL();
+    const values = [req.body.id]
+
+    try {
+		await query.query(sql, values)
+		message = "Task deleted successfully.";
+		res.status(200).send({message: message});
+	} catch(err) {
+		message = "There was an error deleting the record.";
 		console.log(err)
 		res.status(400).send({
 			message: message

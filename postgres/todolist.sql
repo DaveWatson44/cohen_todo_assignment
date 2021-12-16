@@ -112,7 +112,6 @@ ALTER TABLE ONLY public.todo_lists ALTER COLUMN id SET DEFAULT nextval('public.p
 --
 
 COPY public.tasks (id, todo_list_id, name, description, due_date, priority, is_completed) FROM stdin;
-1	27	task1	test description	2021-12-25	high	f
 \.
 
 
@@ -121,7 +120,6 @@ COPY public.tasks (id, todo_list_id, name, description, due_date, priority, is_c
 --
 
 COPY public.todo_lists (id, name) FROM stdin;
-27	test
 \.
 
 
