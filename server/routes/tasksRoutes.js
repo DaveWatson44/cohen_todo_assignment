@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const query = require('../db/postgresquery');
+const pg = require('../db/postgresquery');
 const { createTaskSQL, getTasksSQL, updateTaskSQL, deleteTaskSQL } = require('../utils/tasksQueries');
 
 router.get('/tasks', async (req, res, next) => {
@@ -9,7 +9,7 @@ router.get('/tasks', async (req, res, next) => {
 	let message = "There was an error retrieving the records.";
 
 	try {
-		const results = await query.query(sql, values)
+		const results = await pg.query(sql, values)
         const tasks = results.rows;
 
 		res.status(200).send(tasks);
@@ -27,7 +27,7 @@ router.post('/tasks', async (req, res, next) => {
 	let message = '';
 
 	try {
-		await query.query(sql, values)
+		await pg.query(sql, values)
 		message = "Task added successfully.";
 		res.status(200).send({message: message});
 	} catch(err) {
@@ -51,7 +51,7 @@ router.put('/tasks', async (req, res, next) => {
     }
 
 	try {
-		await query.query(sql, values)
+		await pg.query(sql, values)
 		message = "Task updated successfully.";
 		res.status(200).send({message: message});
 	} catch(err) {
@@ -68,7 +68,7 @@ router.delete('/tasks', async (req, res, next) => {
     const values = [req.body.id]
 
     try {
-		await query.query(sql, values)
+		await pg.query(sql, values)
 		message = "Task deleted successfully.";
 		res.status(200).send({message: message});
 	} catch(err) {

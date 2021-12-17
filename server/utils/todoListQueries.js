@@ -14,6 +14,13 @@ module.exports = {
 
     deleteTodoListSQL: function(){
         return 'DELETE FROM todo_lists WHERE id = $1'
+    },
+
+    getTodoListAndTasksSQL: function(){
+        return `SELECT  todo_lists.name, count(tasks.*)
+        FROM todo_lists 
+        LEFT JOIN tasks ON tasks.todo_list_id = todo_lists.id
+        GROUP BY 1;`
     }
     
 }

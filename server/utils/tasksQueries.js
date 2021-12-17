@@ -4,6 +4,10 @@ module.exports = {
         return 'SELECT * FROM tasks WHERE todo_list_id = $1'
     },
 
+    getCompletedTasksSQL(){
+        return `SELECT * FROM tasks WHERE todo_list_id = $1 and is_completed = 't'`
+    },
+
     createTaskSQL: function(){
         return 'INSERT INTO tasks (todo_list_id, name, description, due_date, priority, is_completed) VALUES ($1, $2, $3, $4, $5, $6)'
     },

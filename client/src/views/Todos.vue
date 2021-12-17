@@ -1,17 +1,22 @@
 <template>
   <div>
-    <todo-list v-for="(todoList, index) in todos" :key="index" :todoList="todoList"></todo-list>
+    <!-- <todo-list v-for="(todoList, index) in todos" :key="index" :todoList="todoList"></todo-list> -->
+    <table>
+      <tr v-for="(todo, index) in todos" :key="index" @click="goToTodo(todo)">
+      <td> {{todo.name}} </td>
+      <td> {{todo.completedTasks.length}} / {{todo.tasks.length}} </td>
+      </tr>
+    </table>
   </div>
 </template>
 
 <script>
-import TodoList from "@/components/TodoList.vue";
+// import TodoList from "@/components/TodoList.vue";
 export default {
-  components: { TodoList },
+  // components: { TodoList },
 
   mounted() {
     this.getTodos();
- 
   },
 
   data() {
@@ -23,18 +28,21 @@ export default {
   methods: {
     getTodos() {
       this.$axios
-        .get("/todo_lists")
+        .get("/todos_info")
         .then((resp) => {
           this.todos = resp.data;
-          console.log(resp.data)
+          console.log(resp.data);
         })
         .catch((err) => {
-          console.log(err)
+          console.log(err);
         });
     },
 
- 
+    goToTodo(e){
+      console.log(e)
+    }
   },
+
 };
 </script>
 

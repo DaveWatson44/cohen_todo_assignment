@@ -1,17 +1,50 @@
 const express = require('express');
 const router = express.Router();
-const query = require('../db/postgresquery');
-const { createTodoListsSQL, getTodoListsSQL, updateTodoListSQL, deleteTodoListSQL } = require('../utils/todoListQueries');
+const pg = require('../db/postgresquery');
+const { createTodoListsSQL, getTodoListsSQL, updateTodoListSQL, deleteTodoListSQL, getTodoListAndTasksSQL } = require('../utils/todoListQueries');
+const { getTasksSQL } = require('../utils/tasksQueries');
+const TodoList  = require('../blueprints/todoList');
 
 router.get('/todo_lists', async (req, res, next) => {
 	const sql = getTodoListsSQL();
 	let message = "There was an error retrieving the records.";
 
 	try {
-		const results = await query.query(sql)
+		const todos = await pg.query(sql)
+
         const todoLists = results.rows;
         
 		res.status(200).send(todoLists);
+	} catch(err) {
+		console.log(err)
+		res.status(400).send({
+			message: message
+		})
+	}
+});
+
+router.get('/todos_info', async (req, res, next) => {
+	const todo_sql = getTodoListsSQL();
+
+	let message = "There was an error retrieving the records.";
+
+	try {
+		const todos = await pg.query(todo_sql);
+
+        const todoLists = todos.rows;
+
+		let todoInfo = [];
+
+		for(let todoList of todoLists){
+			let todo = new TodoList(todoList.id, todoList.name)
+			let tasks = await todo.tasks;
+			let completedTasks = await todo.completedTasks;
+	
+			todoInfo.push({'name': todo.name, 'tasks': tasks, 'completedTasks': completedTasks })
+
+		}
+
+		res.status(200).send(todoInfo);
 	} catch(err) {
 		console.log(err)
 		res.status(400).send({
@@ -26,7 +59,7 @@ router.post('/todo_lists', async (req, res, next) => {
 	let message = '';
 
 	try {
-		await query.query(sql, values)
+		await pg.query(sql, values)
 		message = "Project added successfully.";
 		res.status(200).send({message: message});
 	} catch(err) {
@@ -44,7 +77,7 @@ router.put('/todo_lists', async (req, res, next) => {
 	let message = '';
 
 	try {
-		await query.query(sql, values)
+		await pg.query(sql, values)
 		message = "Todo List updated successfully.";
 		res.status(200).send({message: message});
 	} catch(err) {
@@ -62,7 +95,7 @@ router.delete('/todo_lists', async (req, res, next) => {
 	let message = '';
 
 	try {
-		await query.query(sql, values)
+		await pg.query(sql, values)
 		message = "Todo List deleted successfully.";
 		res.status(200).send({message: message});
 	} catch(err) {
