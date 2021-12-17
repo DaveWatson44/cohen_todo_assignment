@@ -65,8 +65,7 @@ router.put('/tasks', async (req, res, next) => {
 
 router.delete('/tasks', async (req, res, next) => {
     const sql = deleteTaskSQL();
-    const values = [req.body.id]
-
+    const values = [req.query.id]
     try {
 		await pg.query(sql, values)
 		message = "Task deleted successfully.";

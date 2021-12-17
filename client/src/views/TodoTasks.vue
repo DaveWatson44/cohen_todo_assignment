@@ -35,7 +35,6 @@ export default {
         })
         .then((resp) => {
           this.tasks = resp.data;
-          console.log(resp.data);
         })
         .catch((err) => {
           console.log(err);

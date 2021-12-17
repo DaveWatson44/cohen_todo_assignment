@@ -28,16 +28,14 @@ export default {
         .get("/todos_info")
         .then((resp) => {
           this.todos = resp.data;
-          console.log(resp.data);
         })
         .catch((err) => {
           console.log(err);
         });
     },
 
-    goToTodo(e){
-      console.log(e)
-      this.$router.push(`todo_tasks/${e.id}`)
+    goToTodo(todo){
+      this.$router.push(`todo_tasks/${todo.id}`)
     }
   },
 

@@ -1,8 +1,13 @@
 <template>
   <tr>
     <td>
-      <input :disabled="canEdit" type="text" id="name" v-model="task.name"
-      @change="updateTask(task.name, 'name')" />
+      <input
+        :disabled="canEdit"
+        type="text"
+        id="name"
+        v-model="task.name"
+        @change="updateTask(task.name, 'name')"
+      />
     </td>
     <td>
       <input
@@ -32,6 +37,7 @@
       />
     </td>
     <button @click="toggleEdit">Edit</button>
+    <button @click="deleteTask(task.id)">Delete</button>
   </tr>
 </template>
 
@@ -51,10 +57,10 @@ export default {
       this.canEdit = !this.canEdit;
     },
 
-    updateTask(newTaskValue, taskKey){
-        let updatedTaskInfo = {'id': this.$route.params.id};
-        updatedTaskInfo[taskKey] = newTaskValue
-        this.$axios
+    updateTask(newTaskValue, taskKey) {
+      let updatedTaskInfo = { id: this.$route.params.id };
+      updatedTaskInfo[taskKey] = newTaskValue;
+      this.$axios
         .put("/tasks", updatedTaskInfo)
         .then((resp) => {
           this.todos = resp.data;
@@ -62,7 +68,17 @@ export default {
         .catch((err) => {
           console.log(err);
         });
-    }
+    },
+    deleteTask(taskId) {
+        this.$axios
+        .delete("/tasks", {params: {'id': taskId}})
+        .then((resp) => {
+          this.todos = resp.data;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
   },
 };
 </script>
