@@ -1,7 +1,7 @@
 module.exports = {
 
     getTasksSQL: function(){
-        return 'SELECT * FROM tasks WHERE todo_list_id = $1'
+        return "SELECT *, to_char( due_date, 'YYYY-MM-DD') AS due_date FROM tasks WHERE todo_list_id = $1"
     },
 
     getCompletedTasksSQL(){

@@ -4,6 +4,15 @@ import router from './router'
 import store from './store'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import axios from "@/axios";
+import { library } from "@fortawesome/fontawesome-svg-core";
+import {
+  faTrashAlt,
+  faEdit,
+} from "@fortawesome/free-solid-svg-icons";
+
+
+library.add(faTrashAlt);
+library.add(faEdit);
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 Vue.prototype.$axios = axios;

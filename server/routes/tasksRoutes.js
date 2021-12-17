@@ -11,7 +11,7 @@ router.get('/tasks', async (req, res, next) => {
 	try {
 		const results = await pg.query(sql, values)
         const tasks = results.rows;
-
+		
 		res.status(200).send(tasks);
 	} catch(err) {
 		console.log(err)

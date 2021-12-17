@@ -21,7 +21,7 @@
     <td>
       <input
         :disabled="canEdit"
-        type="text"
+        type="date"
         id="dueDate"
         v-model="task.due_date"
         @change="updateTask(task.due_date, 'due_date')"
@@ -36,8 +36,16 @@
         @change="updateTask(task.priority, 'priority')"
       />
     </td>
-    <button @click="toggleEdit">Edit</button>
-    <button @click="deleteTask(task.id)">Delete</button>
+    <button>
+      <font-awesome-icon :icon="['fas', 'edit']" @click="toggleEdit" />
+    </button>
+    <button>
+      <font-awesome-icon
+        style="color: red"
+        :icon="['fas', 'trash-alt']"
+        @click="deleteTask(task.id)"
+      />
+    </button>
   </tr>
 </template>
 
@@ -60,6 +68,7 @@ export default {
     updateTask(newTaskValue, taskKey) {
       let updatedTaskInfo = { id: this.$route.params.id };
       updatedTaskInfo[taskKey] = newTaskValue;
+
       this.$axios
         .put("/tasks", updatedTaskInfo)
         .then((resp) => {
@@ -70,8 +79,8 @@ export default {
         });
     },
     deleteTask(taskId) {
-        this.$axios
-        .delete("/tasks", {params: {'id': taskId}})
+      this.$axios
+        .delete("/tasks", { params: { id: taskId } })
         .then((resp) => {
           this.todos = resp.data;
         })
