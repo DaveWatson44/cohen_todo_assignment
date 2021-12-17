@@ -40,7 +40,7 @@ router.get('/todos_info', async (req, res, next) => {
 			let tasks = await todo.tasks;
 			let completedTasks = await todo.completedTasks;
 	
-			todoInfo.push({'name': todo.name, 'tasks': tasks, 'completedTasks': completedTasks })
+			todoInfo.push({'id':todo.id, 'name': todo.name, 'tasks': tasks, 'completedTasks': completedTasks })
 
 		}
 

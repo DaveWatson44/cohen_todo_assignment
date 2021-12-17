@@ -1,6 +1,5 @@
 <template>
   <div>
-    <!-- <todo-list v-for="(todoList, index) in todos" :key="index" :todoList="todoList"></todo-list> -->
     <table>
       <tr v-for="(todo, index) in todos" :key="index" @click="goToTodo(todo)">
       <td> {{todo.name}} </td>
@@ -11,9 +10,7 @@
 </template>
 
 <script>
-// import TodoList from "@/components/TodoList.vue";
 export default {
-  // components: { TodoList },
 
   mounted() {
     this.getTodos();
@@ -24,7 +21,7 @@ export default {
       todos: [],
     };
   },
-
+  
   methods: {
     getTodos() {
       this.$axios
@@ -40,6 +37,7 @@ export default {
 
     goToTodo(e){
       console.log(e)
+      this.$router.push(`todo_tasks/${e.id}`)
     }
   },
 
