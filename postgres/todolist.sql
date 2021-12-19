@@ -26,7 +26,8 @@ SET default_table_access_method = heap;
 
 CREATE TABLE public.todo_lists (
     id integer NOT NULL,
-    name character varying(255) NOT NULL
+    name character varying(255) NOT NULL,
+    is_completed boolean DEFAULT false NOT NULL
 );
 
 
@@ -112,6 +113,8 @@ ALTER TABLE ONLY public.todo_lists ALTER COLUMN id SET DEFAULT nextval('public.p
 --
 
 COPY public.tasks (id, todo_list_id, name, description, due_date, priority, is_completed) FROM stdin;
+4	1	name4	desc4	2021-12-15	High	t
+1	1	Test	Test	2021-12-18	High	f
 \.
 
 
@@ -119,7 +122,8 @@ COPY public.tasks (id, todo_list_id, name, description, due_date, priority, is_c
 -- Data for Name: todo_lists; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.todo_lists (id, name) FROM stdin;
+COPY public.todo_lists (id, name, is_completed) FROM stdin;
+1	Groceries	f
 \.
 
 
@@ -127,7 +131,7 @@ COPY public.todo_lists (id, name) FROM stdin;
 -- Name: projects_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.projects_id_seq', 27, true);
+SELECT pg_catalog.setval('public.projects_id_seq', 57, true);
 
 
 --

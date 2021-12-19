@@ -8,7 +8,7 @@
     </div>
     <div class="todosTable__container">
       <table class="todos__container">
-        <tr v-for="(todo, index) in todos" :key="index" class="todo__row">
+        <tr v-for="(todo, index) in todos" :key="index" :class="['todo__row', todo.isCompleted ? 'finishedTodo' : '']">
           <td class="name__cell">
             <span class="todo__name" @click="goToTodo(todo)">{{
               todo.name
@@ -82,7 +82,9 @@ export default {
       this.$axios
         .get("/todos_info")
         .then((resp) => {
-          this.todos = resp.data;
+          let todos = resp.data;
+          let sortedTodos = todos.sort((todoOne, todoTwo) => todoOne.isCompleted - todoTwo.isCompleted)
+          this.todos = sortedTodos;
           console.log(this.todos);
         })
         .catch((err) => {
@@ -112,6 +114,7 @@ export default {
             console.log(resp.data);
             this.addNewTodo = !this.addNewTodo;
             this.getTodos();
+            this.newTodoName = '';
           })
           .catch((err) => {
             console.log(err);
@@ -138,7 +141,11 @@ export default {
           this.getTodos();
         })
         .catch((err) => {
-          console.log(err);
+          if(err.response.data.error == '23503'){
+            alert("There are still tasks attached to this todo.")
+          } else{
+            console.log(err)
+          }
         });
     },
   },
@@ -224,5 +231,9 @@ export default {
   color: red;
   font-size: 0.8em;
   margin: 3px 0 0 5px;
+}
+
+.finishedTodo{
+  text-decoration: line-through;
 }
 </style>

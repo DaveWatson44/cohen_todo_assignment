@@ -36,11 +36,11 @@ router.get('/todos_info', async (req, res, next) => {
 		let todoInfo = [];
 
 		for(let todoList of todoLists){
-			let todo = new TodoList(todoList.id, todoList.name)
+			let todo = new TodoList(todoList.id, todoList.name, todoList.is_completed)
 			let tasks = await todo.tasks;
 			let completedTasks = await todo.completedTasks;
 	
-			todoInfo.push({'id':todo.id, 'name': todo.name, 'tasks': tasks, 'completedTasks': completedTasks })
+			todoInfo.push({'id':todo.id, 'name': todo.name, 'tasks': tasks, 'completedTasks': completedTasks, 'isCompleted': todo.isCompleted })
 
 		}
 
@@ -102,7 +102,7 @@ router.delete('/todo_lists', async (req, res, next) => {
 		message = "There was an error deleting the record.";
 		console.log(err)
 		res.status(400).send({
-			message: message
+			error: err.code
 		})
 	}
 });

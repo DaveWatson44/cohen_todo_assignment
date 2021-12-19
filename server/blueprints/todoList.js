@@ -3,9 +3,10 @@ const { getTasksSQL, getCompletedTasksSQL } = require('../utils/tasksQueries');
 const pg = require('../db/postgresquery');
 
 module.exports = class TodoList {
-    constructor(id, name) {
+    constructor(id, name, isCompleted) {
         this.id = id;
         this.name = name;
+        this.isCompleted = isCompleted
     }
 
     get tasks() {
