@@ -17,15 +17,8 @@ export default {
 }
 
 .todoList {
-  width: 90%;
+  width: 250px;
   margin: 0 auto;
   
-  @media screen and (min-width: "600px") {
-    width: 60%;
-  }
-
-  @media screen and (min-width: "800px") {
-    width: 20%;
-  }
 }
 </style>
