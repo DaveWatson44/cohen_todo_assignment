@@ -51,6 +51,8 @@ router.put('/tasks', async (req, res, next) => {
     }
 
 	try {
+		console.log(sql)
+		console.log(values)
 		await pg.query(sql, values)
 		message = "Task updated successfully.";
 		res.status(200).send({message: message});

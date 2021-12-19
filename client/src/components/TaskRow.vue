@@ -2,39 +2,43 @@
   <tr>
     <td>
       <input
-        :disabled="canEdit"
+        :disabled="task.canEdit == false ? task.canEdit : canEdit"
         type="text"
         id="name"
         v-model="task.name"
-        @change="updateTask(task.name, 'name')"
+        @change="updateTask( task.id, task.name, 'name')"
       />
     </td>
     <td>
       <input
-        :disabled="canEdit"
+        :disabled="task.canEdit == false ? task.canEdit : canEdit"
         type="text"
         id="description"
         v-model="task.description"
-        @change="updateTask(task.description, 'description')"
+        @change="updateTask( task.id, task.description, 'description')"
       />
     </td>
     <td>
       <input
-        :disabled="canEdit"
+        :disabled="task.canEdit == false ? task.canEdit : canEdit"
         type="date"
         id="dueDate"
         v-model="task.due_date"
-        @change="updateTask(task.due_date, 'due_date')"
+        @change="updateTask( task.id, task.due_date, 'due_date')"
       />
     </td>
     <td>
-      <input
-        :disabled="canEdit"
-        type="text"
+      <select
+        :disabled="task.canEdit == false ? task.canEdit : canEdit"
+   
         id="priority"
         v-model="task.priority"
-        @change="updateTask(task.priority, 'priority')"
-      />
+        @change="updateTask( task.id, task.priority, 'priority')"
+      >
+      <option v-for="(priority, index) in priorities" :key="index" :value="priority">{{ priority }}</option></select>
+    </td>
+    <td>
+      <input type="checkbox" @change="updateTask( task.id, task.is_completed, 'is_completed')" v-model="task.is_completed">
     </td>
     <button>
       <font-awesome-icon :icon="['fas', 'edit']" @click="toggleEdit" />
@@ -57,6 +61,7 @@ export default {
   data() {
     return {
       canEdit: true,
+      priorities: ['Low', 'Medium', 'High']
     };
   },
 
@@ -65,14 +70,15 @@ export default {
       this.canEdit = !this.canEdit;
     },
 
-    updateTask(newTaskValue, taskKey) {
-      let updatedTaskInfo = { id: this.$route.params.id };
+    updateTask(taskId, newTaskValue, taskKey) {
+      let updatedTaskInfo = { id: taskId };
       updatedTaskInfo[taskKey] = newTaskValue;
 
       this.$axios
         .put("/tasks", updatedTaskInfo)
         .then((resp) => {
-          this.todos = resp.data;
+          this.$emit('getTasksEmitted');
+          console.log(resp.data)
         })
         .catch((err) => {
           console.log(err);
@@ -82,7 +88,8 @@ export default {
       this.$axios
         .delete("/tasks", { params: { id: taskId } })
         .then((resp) => {
-          this.todos = resp.data;
+          console.log(resp)
+          this.$emit('getTasksEmitted');
         })
         .catch((err) => {
           console.log(err);
@@ -93,4 +100,5 @@ export default {
 </script>
 
 <style lang='scss' scoped>
+
 </style>

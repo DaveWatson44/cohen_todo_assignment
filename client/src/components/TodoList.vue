@@ -141,6 +141,7 @@ export default {
           this.getTodos();
         })
         .catch((err) => {
+          // Will need to throw alert box that double checks if they want to delete the todo and then wipeout all tasks associated with todo then delte the todo
           if(err.response.data.error == '23503'){
             alert("There are still tasks attached to this todo.")
           } else{
