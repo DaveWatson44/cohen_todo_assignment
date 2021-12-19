@@ -91,7 +91,7 @@ router.put('/todo_lists', async (req, res, next) => {
 
 router.delete('/todo_lists', async (req, res, next) => {
     const sql = deleteTodoListSQL();
-	const values = [req.body.id]
+	const values = [req.query.id]
 	let message = '';
 
 	try {
