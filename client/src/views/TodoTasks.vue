@@ -24,6 +24,6 @@ export default {
 
 .todoTasks__container{
   margin: 0 auto;
-  width: 800px;
+  width: 700px;
 }
 </style>

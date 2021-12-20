@@ -6,7 +6,7 @@
         type="text"
         id="name"
         v-model="task.name"
-        @change="updateTask( task.id, task.name, 'name')"
+        @change="updateTask(task.id, task.name, 'name')"
       />
     </td>
     <td>
@@ -15,7 +15,7 @@
         type="text"
         id="description"
         v-model="task.description"
-        @change="updateTask( task.id, task.description, 'description')"
+        @change="updateTask(task.id, task.description, 'description')"
       />
     </td>
     <td>
@@ -24,24 +24,35 @@
         type="date"
         id="dueDate"
         v-model="task.due_date"
-        @change="updateTask( task.id, task.due_date, 'due_date')"
+        @change="updateTask(task.id, task.due_date, 'due_date')"
       />
     </td>
     <td>
       <select
         :disabled="task.canEdit == false ? task.canEdit : canEdit"
-   
         id="priority"
         v-model="task.priority"
-        @change="updateTask( task.id, task.priority, 'priority')"
+        @change="updateTask(task.id, task.priority, 'priority')"
       >
-      <option v-for="(priority, index) in priorities" :key="index" :value="priority">{{ priority }}</option></select>
+        <option
+          v-for="(priority, index) in priorities"
+          :key="index"
+          :value="priority"
+        >
+          {{ priority }}
+        </option>
+      </select>
     </td>
     <td>
-      <input type="checkbox" @change="updateTask( task.id, task.is_completed, 'is_completed')" v-model="task.is_completed">
+      <input
+        type="checkbox"
+        @change="updateTask(task.id, task.is_completed, 'is_completed')"
+        v-model="task.is_completed"
+      />
     </td>
     <button>
-      <font-awesome-icon :icon="['fas', 'edit']" @click="toggleEdit" />
+      <font-awesome-icon v-if="canEdit" :icon="['fas', 'edit']" @click="toggleEdit(task)" />
+      <font-awesome-icon v-else :icon="['fas', 'save']" @click="toggleEdit(task)" />
     </button>
     <button>
       <font-awesome-icon
@@ -61,13 +72,17 @@ export default {
   data() {
     return {
       canEdit: true,
-      priorities: ['Low', 'Medium', 'High']
+      priorities: ["Low", "Medium", "High"],
     };
   },
 
   methods: {
-    toggleEdit() {
-      this.canEdit = !this.canEdit;
+    toggleEdit(task) {
+      if (task.is_completed == true) {
+        return;
+      } else {
+        this.canEdit = !this.canEdit;
+      }
     },
 
     updateTask(taskId, newTaskValue, taskKey) {
@@ -77,8 +92,8 @@ export default {
       this.$axios
         .put("/tasks", updatedTaskInfo)
         .then((resp) => {
-          this.$emit('getTasksEmitted');
-          console.log(resp.data)
+          this.$emit("getTasksEmitted");
+          console.log(resp.data);
         })
         .catch((err) => {
           console.log(err);
@@ -88,8 +103,8 @@ export default {
       this.$axios
         .delete("/tasks", { params: { id: taskId } })
         .then((resp) => {
-          console.log(resp)
-          this.$emit('getTasksEmitted');
+          console.log(resp);
+          this.$emit("getTasksEmitted");
         })
         .catch((err) => {
           console.log(err);
@@ -100,5 +115,4 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-
 </style>
