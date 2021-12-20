@@ -1,13 +1,13 @@
 <template>
   <div class="todoTasks__container">
-    <todo-tasks ></todo-tasks>
+    <tasks ></tasks>
   </div>
 </template>
 
 <script>
-import TodoTasks from '@/components/TodoTasks.vue'
+import Tasks from '@/components/Tasks.vue'
 export default {
-  components: {TodoTasks},
+  components: {Tasks},
   data() {
     return {
    
@@ -24,6 +24,6 @@ export default {
 
 .todoTasks__container{
   margin: 0 auto;
-  width: 700px;
+  width: 640px;
 }
 </style>
