@@ -24,7 +24,7 @@
 
       <tr v-if="startAddTask">
         <td>
-          <input type="text" id="name" v-model="taskName" />
+          <input type="text" id="name" v-model="taskName" ref="taskName" />
         </td>
         <td>
           <input type="text" id="description" v-model="taskDescription" />
@@ -47,14 +47,14 @@
           <input type="checkbox" v-model="taskIsCompleted" />
         </td>
 
-        <button>
-          <font-awesome-icon :icon="['fas', 'save']" @click="addTask()" />
+        <button :disabled="taskName < 1 || taskDescription < 1"  @click="addTask()" >
+          <font-awesome-icon :icon="['fas', 'save']"/>
         </button>
-        <button>
+        <button @click="startAddTask = !startAddTask">
           <font-awesome-icon
             style="color: red"
             :icon="['fas', 'trash-alt']"
-            @click="startAddTask = !startAddTask"
+            
           />
         </button>
       </tr>
@@ -100,7 +100,7 @@ export default {
         })
         .then((resp) => {
           let tasks = resp.data;
-         
+
           this.tasks = tasks;
         })
         .catch((err) => {
@@ -110,6 +110,9 @@ export default {
 
     initAddTask() {
       this.startAddTask = !this.startAddTask;
+      this.$nextTick(() => {
+        this.$refs.taskName.focus();
+      });
     },
 
     addTask() {
@@ -134,6 +137,9 @@ export default {
               (this.taskDueDate = ""),
               (this.taskPriority = "Low"),
               this.getTasks();
+            this.$nextTick(() => {
+              this.$refs.taskName.focus();
+            });
           })
           .catch((err) => {
             console.log(err);

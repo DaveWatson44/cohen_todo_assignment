@@ -6,7 +6,6 @@
         type="text"
         id="name"
         v-model="task.name"
-        @change="updateTask(task.id, task.name, 'name')"
       />
     </td>
     <td>
@@ -15,7 +14,6 @@
         type="text"
         id="description"
         v-model="task.description"
-        @change="updateTask(task.id, task.description, 'description')"
       />
     </td>
     <td>
@@ -24,7 +22,6 @@
         type="date"
         id="dueDate"
         v-model="task.due_date"
-        @change="updateTask(task.id, task.due_date, 'due_date')"
       />
     </td>
     <td>
@@ -32,7 +29,6 @@
         :disabled="task.canEdit == false ? task.canEdit : canEdit"
         id="priority"
         v-model="task.priority"
-        @change="updateTask(task.id, task.priority, 'priority')"
       >
         <option
           v-for="(priority, index) in priorities"
@@ -46,20 +42,22 @@
     <td>
       <input
         type="checkbox"
-        @change="updateTask(task.id, task.is_completed, 'is_completed')"
         v-model="task.is_completed"
+        @change="updateTask(task)"
       />
     </td>
-    <button>
-      <font-awesome-icon v-if="canEdit" :icon="['fas', 'edit']" @click="toggleEdit(task)" />
-      <font-awesome-icon v-else :icon="['fas', 'save']" @click="toggleEdit(task)" />
+    <button
+      v-if="canEdit"
+      :disabled="task.name.length < 1 || task.description.length < 1"
+      @click="toggleEdit(task)"
+    >
+      <font-awesome-icon :icon="['fas', 'edit']" />
     </button>
-    <button>
-      <font-awesome-icon
-        style="color: red"
-        :icon="['fas', 'trash-alt']"
-        @click="deleteTask(task.id)"
-      />
+    <button v-else @click="updateTask(task)">
+      <font-awesome-icon :icon="['fas', 'save']" />
+    </button>
+    <button @click="deleteTask(task.id)">
+      <font-awesome-icon style="color: red" :icon="['fas', 'trash-alt']" />
     </button>
   </tr>
 </template>
@@ -85,15 +83,13 @@ export default {
       }
     },
 
-    updateTask(taskId, newTaskValue, taskKey) {
-      let updatedTaskInfo = { id: taskId };
-      updatedTaskInfo[taskKey] = newTaskValue;
-
+    updateTask(task) {
       this.$axios
-        .put("/tasks", updatedTaskInfo)
+        .put("/tasks", task)
         .then((resp) => {
           this.$emit("getTasksEmitted");
           console.log(resp.data);
+          this.canEdit = true;
         })
         .catch((err) => {
           console.log(err);
