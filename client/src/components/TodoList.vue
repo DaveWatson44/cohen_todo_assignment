@@ -8,7 +8,7 @@
     </div>
     <div class="todosTable__container">
       <table class="todos__container">
-        <tr v-for="(todo, index) in todos" :key="index" :class="['todo__row', todo.isCompleted ? 'finishedTodo' : '']">
+        <tr v-for="(todo, index) in todos" :key="index" :class="['todo__row', ((todo.completedTasks.length == todo.tasks.length) && todo.tasks.length != 0) ? 'finishedTodo' : '']">
           <td class="name__cell">
             <span class="todo__name" @click="goToTodo(todo)">{{
               todo.name
@@ -16,11 +16,11 @@
           </td>
           <td>{{ todo.completedTasks.length }} / {{ todo.tasks.length }}</td>
           <td class="trashIcon__cell">
-            <button>
+            <button @click="deleteTodo(todo)">
               <font-awesome-icon
                 class="trashIcon"
                 :icon="['fas', 'trash-alt']"
-                @click="deleteTodo(todo)"
+                
               />
             </button>
           </td>
@@ -43,6 +43,7 @@
             </p>
             <p class="error" v-if="showNoNameError">Please enter a name.</p>
           </td>
+          <td><button @click="addTodo"><font-awesome-icon class="addTodoButton" :icon="['fas', 'plus']" /></button></td>
         </tr>
       </table>
     </div>
@@ -64,8 +65,10 @@ export default {
       showExceedsLengthError: false,
       showNoNameError: false,
       canSubmit: false,
+     
     };
   },
+
 
   watch: {
     newTodoName() {
@@ -83,9 +86,9 @@ export default {
         .get("/todos_info")
         .then((resp) => {
           let todos = resp.data;
+          console.log(todos)
           let sortedTodos = todos.sort((todoOne, todoTwo) => todoOne.isCompleted - todoTwo.isCompleted)
           this.todos = sortedTodos;
-          console.log(this.todos);
         })
         .catch((err) => {
           console.log(err);

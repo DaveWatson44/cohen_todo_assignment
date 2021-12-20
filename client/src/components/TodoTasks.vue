@@ -22,7 +22,7 @@
       >
       </task-row>
 
-      <tr v-if="startAddTask">
+      <tr v-if="startAddTask || tasks.length < 1">
         <td>
           <input type="text" id="name" v-model="taskName" ref="taskName" />
         </td>
@@ -134,7 +134,7 @@ export default {
             console.log(resp.data);
             (this.taskName = ""),
               (this.taskDescription = ""),
-              (this.taskDueDate = ""),
+              (this.taskDueDate = this.today),
               (this.taskPriority = "Low"),
               this.getTasks();
             this.$nextTick(() => {

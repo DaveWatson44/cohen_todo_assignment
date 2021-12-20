@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const pg = require('../db/postgresquery');
-const { createTodoListsSQL, getTodoListsSQL, updateTodoListSQL, deleteTodoListSQL, getTodoListAndTasksSQL } = require('../utils/todoListQueries');
+const { createTodoListsSQL, getTodoListsSQL, updateTodoListSQL, deleteTodoListSQL, getTodoListAndTasksSQL, updateTodosSQL } = require('../utils/todoListQueries');
 const { getTasksSQL } = require('../utils/tasksQueries');
 const TodoList  = require('../blueprints/todoList');
 
@@ -34,11 +34,23 @@ router.get('/todos_info', async (req, res, next) => {
         const todoLists = todos.rows;
 
 		let todoInfo = [];
-
+		let values = [];
+		
 		for(let todoList of todoLists){
 			let todo = new TodoList(todoList.id, todoList.name, todoList.is_completed)
 			let tasks = await todo.tasks;
 			let completedTasks = await todo.completedTasks;
+			
+			if(tasks.length != 0 && tasks.length == completedTasks.length && todo.isCompleted != true){
+				todo.isCompleted = true;
+				let updateData = {'id': todo.id, 'is_completed': todo.isCompleted}
+				let sql = updateTodosSQL(updateData);
+				for(val in updateData){
+					let value = updateData[val];
+					values.push(value);
+				}
+				pg.query(sql, values)
+			}
 	
 			todoInfo.push({'id':todo.id, 'name': todo.name, 'tasks': tasks, 'completedTasks': completedTasks, 'isCompleted': todo.isCompleted })
 
@@ -72,9 +84,15 @@ router.post('/todo_lists', async (req, res, next) => {
 });
 
 router.put('/todo_lists', async (req, res, next) => {
-	const sql = updateTodoListSQL();
-	const values = [req.body.id]
-	let message = '';
+	const updateData = req.body;
+	const sql = updateTodosSQL(updateData);
+    const values = [];
+    let message = '';
+
+    for(val in updateData){
+        let value = updateData[val];
+        values.push(value);
+    }
 
 	try {
 		await pg.query(sql, values)

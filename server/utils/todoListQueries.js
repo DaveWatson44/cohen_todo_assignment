@@ -8,8 +8,27 @@ module.exports = {
         return 'INSERT INTO todo_lists (name) VALUES ($1)'
     },
 
-    updateTodoListSQL: function(){
-        return `UPDATE todo_lists SET name = $2 WHERE id = $1`
+    // updateTodoListSQL: function(){
+    //     return `UPDATE todo_lists SET name = $2 WHERE id = $1`
+    // },
+
+    updateTodosSQL: function(records){
+        console.log(records)
+        let sql = 'UPDATE todo_lists SET ';
+        const fields = Object.keys(records);
+        const whereClause = `WHERE id = $1;`
+        
+        for(let i=1; i <fields.length; i++){
+            if(i+1 == fields.length){
+                sql += `${fields[i]} = $${i+1} `
+            } else{
+                sql += `${fields[i]} = $${i+1}, `
+            }
+        }
+
+        sql += whereClause;
+       
+        return sql
     },
 
     deleteTodoListSQL: function(){
