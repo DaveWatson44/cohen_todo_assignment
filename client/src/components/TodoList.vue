@@ -1,28 +1,40 @@
 <template>
   <div>
-    <div class="todoHeader">
+    <!-- <div class="todoHeader">
       <h2 class="todos__title">Todos</h2>
       <button class="addTodoButton" @click="initAddTodo">
         <font-awesome-icon :icon="['fas', 'plus']" />
       </button>
-    </div>
+    </div> -->
     <div class="todosTable__container">
       <table class="todos__container">
-        <tr v-for="(todo, index) in todos" :key="index" :class="['todo__row', ((todo.completedTasks.length == todo.tasks.length) && todo.tasks.length != 0) ? 'finishedTodo' : '']">
-          <td class="name__cell">
-            <span class="todo__name" @click="goToTodo(todo)">{{
-              todo.name
-            }}</span>
-          </td>
-          <td>{{ todo.completedTasks.length }} / {{ todo.tasks.length }}</td>
-          <td class="trashIcon__cell">
-            <button @click="deleteTodo(todo)">
-              <font-awesome-icon
-                class="trashIcon"
-                :icon="['fas', 'trash-alt']"
-                
-              />
-            </button>
+        <tr v-for="(todo, index) in todos" :key="index" class="todo__row">
+          <td class="todo__cell">
+            <span
+              :class="[
+                'todoInfo__container',
+                todo.completedTasks.length == todo.tasks.length &&
+                todo.tasks.length != 0
+                  ? 'finishedTodo'
+                  : '',
+              ]"
+            >
+              <span class="todo__name" @click="goToTodo(todo)">{{
+                todo.name
+              }}</span>
+              <span
+                >{{ todo.completedTasks.length }} /
+                {{ todo.tasks.length }}</span
+              >
+            </span>
+            <span class="trashIcon__cell">
+              <button @click="deleteTodo(todo)" class="trashButton">
+                <font-awesome-icon
+                  class="trashIcon"
+                  :icon="['fas', 'times']"
+                />
+              </button>
+            </span>
           </td>
         </tr>
         <tr v-show="addNewTodo">
@@ -43,7 +55,14 @@
             </p>
             <p class="error" v-if="showNoNameError">Please enter a name.</p>
           </td>
-          <td><button @click="addTodo"><font-awesome-icon class="addTodoButton" :icon="['fas', 'plus']" /></button></td>
+          <td>
+            <button @click="addTodo">
+              <font-awesome-icon
+                class="addTodoButton"
+                :icon="['fas', 'plus']"
+              />
+            </button>
+          </td>
         </tr>
       </table>
     </div>
@@ -65,10 +84,8 @@ export default {
       showExceedsLengthError: false,
       showNoNameError: false,
       canSubmit: false,
-     
     };
   },
-
 
   watch: {
     newTodoName() {
@@ -86,8 +103,10 @@ export default {
         .get("/todos_info")
         .then((resp) => {
           let todos = resp.data;
-          console.log(todos)
-          let sortedTodos = todos.sort((todoOne, todoTwo) => todoOne.isCompleted - todoTwo.isCompleted)
+          console.log(todos);
+          let sortedTodos = todos.sort(
+            (todoOne, todoTwo) => todoOne.isCompleted - todoTwo.isCompleted
+          );
           this.todos = sortedTodos;
         })
         .catch((err) => {
@@ -117,7 +136,7 @@ export default {
             console.log(resp.data);
             this.addNewTodo = !this.addNewTodo;
             this.getTodos();
-            this.newTodoName = '';
+            this.newTodoName = "";
           })
           .catch((err) => {
             console.log(err);
@@ -145,10 +164,10 @@ export default {
         })
         .catch((err) => {
           // Will need to throw alert box that double checks if they want to delete the todo and then wipeout all tasks associated with todo then delte the todo
-          if(err.response.data.error == '23503'){
-            alert("There are still tasks attached to this todo.")
-          } else{
-            console.log(err)
+          if (err.response.data.error == "23503") {
+            alert("There are still tasks attached to this todo.");
+          } else {
+            console.log(err);
           }
         });
     },
@@ -193,38 +212,54 @@ export default {
 
 .todos__container {
   //   border: 1px solid black;
-  padding: 20px !important;
+  // padding: 20px !important;
   width: 100%;
-  border-collapse: collapse;
+  // border-collapse: collapse;
 }
 
 .todo__row {
-  background-color: lightgrey;
-  height: 30px;
+  background-color: white;
+  // height: 30px;
+
   &:hover {
-    background-color: darkgrey;
+    background-color: #e6e6e6;
     cursor: pointer;
   }
 }
-
+.todo__cell {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+}
 .name__cell {
-  width: 150px;
+  // width: 100px;
+}
+
+.todoInfo__container {
+  display: flex;
+  justify-content: space-between;
+  width: 60%;
 }
 
 .todo__name {
   &:hover {
-    color: #ffffff;
+    color: #8c1aff;
   }
 }
 
 .trashIcon__cell {
-  text-align: right;
+  // text-align: right;
+}
+
+.trashButton {
+  background-color: transparent;
+  border: none;
+  &:hover {
+    color: #8c1aff;
+  }
 }
 
 .trashIcon {
-  &:hover {
-    color: red;
-  }
 }
 
 .addTodo__input {
@@ -237,7 +272,12 @@ export default {
   margin: 3px 0 0 5px;
 }
 
-.finishedTodo{
-  text-decoration: line-through;
+.finishedTodo {
+  background: repeating-linear-gradient(180deg, black 0%, black 100%);
+  background-size: 100% 2px;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0.5;
+  // background-color: white;
 }
 </style>

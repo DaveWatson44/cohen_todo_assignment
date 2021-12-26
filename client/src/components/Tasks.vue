@@ -14,30 +14,61 @@
       :priorities="priorities"
       @getTasksEmitted="getTasks()"
     ></task>
-    <div v-if="startAddTask || tasks.length < 1">
-      <input type="text" id="name" v-model="taskName" ref="taskName" />
-      <textarea type="text" id="description" v-model="taskDescription">
-      </textarea>
-      <input type="date" id="dueDate" v-model="taskDueDate" />
-      <select id="priority" v-model="taskPriority">
-        <option
-          v-for="(priority, index) in priorities"
-          :key="index"
-          :value="priority"
+    <div v-if="startAddTask || tasks.length < 1" class="newTask__container">
+      <div>
+        <input
+          class="taskField taskName"
+          type="text"
+          id="name"
+          v-model="taskName"
+          ref="taskName"
+          placeholder="Task name."
+        />
+
+        <input
+          class="taskField taskDueDate"
+          type="date"
+          id="dueDate"
+          v-model="taskDueDate"
+        />
+        <select
+          id="priority"
+          v-model="taskPriority"
+          class="taskField taskPriority"
         >
-          {{ priority }}
-        </option>
-      </select>
-      <input type="checkbox" v-model="taskIsCompleted" />
-      <button
-        :disabled="taskName < 1 || taskDescription < 1"
-        @click="addTask()"
-      >
-        <font-awesome-icon :icon="['fas', 'save']" />
-      </button>
-      <button @click="startAddTask = !startAddTask">
-        <font-awesome-icon style="color: red" :icon="['fas', 'trash-alt']" />
-      </button>
+          <option
+            v-for="(priority, index) in priorities"
+            :key="index"
+            :value="priority"
+          >
+            {{ priority }}
+          </option>
+        </select>
+
+        <input
+          type="checkbox"
+          v-model="taskIsCompleted"
+          class="taskField taskIsCompleted"
+        />
+        <button
+          :disabled="taskName < 1 || taskDescription < 1"
+          @click="addTask()"
+        >
+          <font-awesome-icon :icon="['fas', 'save']" />
+        </button>
+        <button @click="startAddTask = !startAddTask">
+          <font-awesome-icon style="color: red" :icon="['fas', 'trash-alt']" />
+        </button>
+      </div>
+      <div class="details__section">
+        <textarea
+          type="text"
+          id="description"
+          v-model="taskDescription"
+          placeholder="Description"
+        >
+        </textarea>
+      </div>
     </div>
   </div>
 </template>
@@ -132,6 +163,7 @@ export default {
 </script>
 
 <style lang='scss' scoped>
+
 .taskHeader__container {
   display: flex;
   justify-content: space-between;
@@ -156,5 +188,35 @@ th {
     color: green;
     background-color: #ffffff;
   }
+}
+
+.newTask__container {
+  margin-top: 20px;
+}
+
+.taskField {
+  background-color: #ffffff;
+  padding: 5px;
+}
+
+.taskName {
+  border: none;
+  outline: none;
+
+  &:focus {
+    border-bottom: 1px solid black;
+  }
+}
+
+.taskDueDate {
+  border: none;
+  outline: none;
+  &:focus {
+    border-bottom: 1px solid black;
+  }
+}
+
+.details__section {
+  margin-top: 10px;
 }
 </style>

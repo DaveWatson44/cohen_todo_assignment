@@ -9,7 +9,8 @@ import {
   faTrashAlt,
   faEdit,
   faPlus,
-  faSave
+  faSave,
+  faTimes
 } from "@fortawesome/free-solid-svg-icons";
 
 
@@ -17,6 +18,7 @@ library.add(faTrashAlt);
 library.add(faEdit);
 library.add(faPlus);
 library.add(faSave);
+library.add(faTimes);
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 Vue.prototype.$axios = axios;
