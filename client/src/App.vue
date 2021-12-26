@@ -9,7 +9,7 @@
 <style lang="scss">
 body{
 margin: 0;
-background-color:  #f2f2f2;
+background-color:  #d9d9d9;
 }
 
 </style>

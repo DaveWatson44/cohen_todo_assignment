@@ -1,11 +1,25 @@
 <template>
   <div>
-    <!-- <div class="todoHeader">
-      <h2 class="todos__title">Todos</h2>
-      <button class="addTodoButton" @click="initAddTodo">
-        <font-awesome-icon :icon="['fas', 'plus']" />
-      </button>
-    </div> -->
+    <div class="todoHeader__container">
+      <h1 class="header__title">Todos</h1>
+      <div class="todoInput__container">
+        <input
+          type="text"
+          placeholder="New Todo"
+          v-model="newTodoName"
+          @keyup.enter="addTodo"
+          ref="todoInput"
+        />
+        <button class="addTodo__button" @click="addTodo"><font-awesome-icon :icon="['fas', 'plus']" /></button>
+      </div>
+        <p class="error" v-if="showNameTakenError">
+          This name is already in another todo.
+        </p>
+        <p class="error" v-if="showExceedsLengthError">
+          This name is too long.
+        </p>
+        <p class="error" v-if="showNoNameError">Please enter a name.</p>
+    </div>
     <div class="todosTable__container">
       <table class="todos__container">
         <tr v-for="(todo, index) in todos" :key="index" class="todo__row">
@@ -27,41 +41,11 @@
                 {{ todo.tasks.length }}</span
               >
             </span>
-            <span class="trashIcon__cell">
-              <button @click="deleteTodo(todo)" class="trashButton">
-                <font-awesome-icon
-                  class="trashIcon"
-                  :icon="['fas', 'times']"
-                />
+          
+              <button @click="deleteTodo(todo)" class="todoDelete__button">
+                <font-awesome-icon :icon="['fas', 'times']" />
               </button>
-            </span>
-          </td>
-        </tr>
-        <tr v-show="addNewTodo">
-          <td>
-            <input
-              class="addTodo__input"
-              type="text"
-              placeholder="List name"
-              v-model="newTodoName"
-              @keyup.enter="addTodo"
-              ref="todoInput"
-            />
-            <p class="error" v-if="showNameTakenError">
-              This name is already in another todo.
-            </p>
-            <p class="error" v-if="showExceedsLengthError">
-              This name is too long.
-            </p>
-            <p class="error" v-if="showNoNameError">Please enter a name.</p>
-          </td>
-          <td>
-            <button @click="addTodo">
-              <font-awesome-icon
-                class="addTodoButton"
-                :icon="['fas', 'plus']"
-              />
-            </button>
+           
           </td>
         </tr>
       </table>
@@ -176,6 +160,45 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.todoHeader__container {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.header__title {
+  margin: 0;
+  padding-bottom: 10px;
+}
+
+.todoInput__container {
+  display: flex;
+  justify-content: space-between;
+  input {
+    padding: 8px;
+    width: 72%;
+  }
+
+  button {
+    padding: 8px 15px;
+  }
+
+  .addTodo__button{
+    color: #8c1aff;
+    border: 1px solid #ffffff;
+
+    &:hover{
+      background-color: #8c1aff;
+      color: #ffffff;
+      border: 1px solid #ffffff;
+    }
+
+    &:active{
+      background-color: #ffffff;
+      color: #8c1aff;
+      border: 1px solid #ffffff;
+    }
+  }
+}
+
 .todoHeader {
   display: flex;
   justify-content: space-between;
@@ -200,7 +223,8 @@ export default {
 }
 
 .todosTable__container {
-  margin-top: 10px;
+  color: black;
+  margin-top: 70px;
   height: 700px;
   overflow-y: scroll;
   -ms-overflow-style: none;
@@ -211,18 +235,14 @@ export default {
 }
 
 .todos__container {
-  //   border: 1px solid black;
-  // padding: 20px !important;
   width: 100%;
-  // border-collapse: collapse;
 }
 
 .todo__row {
   background-color: white;
-  // height: 30px;
 
   &:hover {
-    background-color: #e6e6e6;
+    background-color: #faf5f5;
     cursor: pointer;
   }
 }
@@ -231,9 +251,7 @@ export default {
   justify-content: space-between;
   padding: 10px;
 }
-.name__cell {
-  // width: 100px;
-}
+
 
 .todoInfo__container {
   display: flex;
@@ -247,11 +265,7 @@ export default {
   }
 }
 
-.trashIcon__cell {
-  // text-align: right;
-}
-
-.trashButton {
+.todoDelete__button {
   background-color: transparent;
   border: none;
   &:hover {
@@ -259,15 +273,11 @@ export default {
   }
 }
 
-.trashIcon {
-}
-
 .addTodo__input {
   width: 120px;
 }
 
 .error {
-  color: red;
   font-size: 0.8em;
   margin: 3px 0 0 5px;
 }
@@ -278,6 +288,5 @@ export default {
   background-position: center;
   background-repeat: no-repeat;
   opacity: 0.5;
-  // background-color: white;
 }
 </style>
