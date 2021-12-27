@@ -1,35 +1,44 @@
 <template>
-  <div >
+  <div>
     <div class="header">
-      <h1 class="todoTitle">{{todoListName}}</h1>
+      <h1 class="todoTitle">{{ todoListName }}</h1>
     </div>
-    <tasks class="todoTasks__container" :todoListId="todoListId" :todoListName="todoListName"></tasks>
+    <tasks
+      class="todoTasks__container"
+      :todoListId="todoListId"
+      :todoListName="todoListName"
+    ></tasks>
   </div>
 </template>
 
 <script>
-import Tasks from '@/components/Tasks.vue'
+import Tasks from "@/components/Tasks.vue";
 export default {
-  components: {Tasks},
-  props: {todoListId: String, todoListName: String},
+  components: { Tasks },
+  props: { todoListId: String, todoListName: String },
   data() {
-    return {
-   
-    };
+    return {};
   },
 
-  methods: {
-  
-  },
+  methods: {},
 };
 </script>
 
 <style lang="scss" scoped>
-
-.todoTasks__container{
+.todoTasks__container {
   margin: 20px auto 0 auto;
-  width: 640px;
   font-family: Arial, Helvetica, sans-serif;
+  width: 90%;
+
+  @media screen and (min-width: 320px) {
+    width: 250px;
+  }
+  @media screen and (min-width: 430px) {
+    width: 65%;
+  }
+  @media screen and (min-width: 630px) {
+    width: 640px;
+  }
 }
 
 .header {
@@ -41,10 +50,18 @@ export default {
   display: flex;
   align-items: flex-end;
 
-  .todoTitle{
-    width: 640px;
+  .todoTitle {
     margin: 0 auto 10px auto;
+    width: 90%;
+    @media screen and (min-width: 320px) {
+      width: 250px;
+    }
+    @media screen and (min-width: 430px) {
+      width: 65%;
+    }
+    @media screen and (min-width: 630px) {
+      width: 640px;
+    }
   }
-
 }
 </style>

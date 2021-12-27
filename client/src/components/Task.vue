@@ -2,20 +2,22 @@
   <div class="task__container">
     <div class="taskDetails__container">
       <div class="taskInformation__container" @click="activateShowDetails">
-        <input
-          type="checkbox"
-          v-model="task.is_completed"
-          @change="updateTask(task)"
-          class="taskField taskIsCompleted"
-        />
-        <input
-          :disabled="task.canEdit == false ? task.canEdit : canEdit"
-          type="text"
-          id="name"
-          v-model="task.name"
-          class="taskField taskName"
-          placeholder="Task name."
-        />
+        <div style="display: flex; align-items: center">
+          <input
+            type="checkbox"
+            v-model="task.is_completed"
+            @change="updateTask(task)"
+            class="taskField taskIsCompleted"
+          />
+          <input
+            :disabled="task.canEdit == false ? task.canEdit : canEdit"
+            type="text"
+            id="name"
+            v-model="task.name"
+            class="taskField taskName"
+            placeholder="Task name."
+          />
+        </div>
 
         <input
           :disabled="task.canEdit == false ? task.canEdit : canEdit"
@@ -56,6 +58,27 @@
         </button>
       </div>
     </div>
+    <select
+      :disabled="task.canEdit == false ? task.canEdit : canEdit"
+      id="priority"
+      v-model="task.priority"
+      class="taskField taskPriorityMobile"
+    >
+      <option
+        v-for="(priority, index) in priorities"
+        :key="index"
+        :value="priority"
+      >
+        {{ priority }}
+      </option>
+    </select>
+    <input
+      :disabled="task.canEdit == false ? task.canEdit : canEdit"
+      type="date"
+      id="dueDate"
+      v-model="task.due_date"
+      class="taskField taskDueDateMobile"
+    />
     <div v-show="showDetails" class="details__section">
       <textarea
         :disabled="task.canEdit == false ? task.canEdit : canEdit"
@@ -66,6 +89,22 @@
         placeholder="Description"
       >
       </textarea>
+    </div>
+    <div class="taskButtonMobile__container">
+      <button
+        v-if="canEdit"
+        :disabled="task.name.length < 1 || task.description.length < 1"
+        @click="toggleEdit(task)"
+        class="taskEditButton"
+      >
+        <font-awesome-icon :icon="['fas', 'edit']" />
+      </button>
+      <button v-else @click="updateTask(task)" class="taskSaveButton">
+        <font-awesome-icon :icon="['fas', 'save']" />
+      </button>
+      <button @click="deleteTask(task.id)" class="taskDeleteButton">
+        <font-awesome-icon :icon="['fas', 'times']" />
+      </button>
     </div>
   </div>
 </template>
@@ -150,8 +189,14 @@ export default {
 .taskInformation__container {
   display: flex;
   align-items: center;
+  width: 95%;
   justify-content: space-between;
-  width: 70%;
+
+
+  @media screen and (min-width: 450px) {
+    justify-content: space-between;
+    width: 80%;
+  }
 }
 
 .taskField {
@@ -162,41 +207,95 @@ export default {
 .taskName {
   border: none;
   outline: none;
-
+  width: 80px;
   &:focus {
     border-bottom: 1px solid black;
+  }
+  @media screen and (min-width: 500px) {
   }
 }
 
 .taskDueDate {
   border: none;
   outline: none;
+  display: none;
   &:focus {
     border-bottom: 1px solid black;
+  }
+  @media screen and(min-width: 630px) {
+    display: block;
+  }
+}
+
+.taskDueDateMobile {
+  display: block;
+  border: none;
+  outline: none;
+  &:focus {
+    border-bottom: 1px solid black;
+  }
+  @media screen and(min-width: 630px) {
+    display: none;
+  }
+}
+
+.taskPriority {
+  display: none;
+  // width: 20px;
+  @media screen and (min-width: 270px) {
+    display: block;
+  }
+}
+
+.taskPriorityMobile {
+  display: block;
+  margin: 10px 0;
+  @media screen and (min-width: 270px) {
+    display: none;
   }
 }
 
 .taskButton__container {
-  height: 29px;
+  height: 25px;
+  display: none;
+  @media screen and(min-width: 450px) {
+    height: 29px;
+    display: block;
+  }
+}
+button {
+  height: 100%;
+  background-color: #ffffff;
+  border: 1px solid #8c1aff;
+  color: #8c1aff;
+  width: 26px;
 
-  button {
-    height: 100%;
+  &:hover {
+    background-color: #8c1aff;
+    color: #ffffff;
+    border: 1px solid #ffffff;
+  }
+
+  &:active {
     background-color: #ffffff;
-    border: 1px solid #8c1aff;
     color: #8c1aff;
+    border: 1px solid #ffffff;
+  }
+
+  @media screen and(min-width: 460px) {
     width: 30px;
+  }
+}
 
-    &:hover {
-      background-color: #8c1aff;
-      color: #ffffff;
-      border: 1px solid #ffffff;
-    }
+.taskButtonMobile__container {
+  height: 25px;
+  display: flex;
+  justify-content: flex-end;
 
-    &:active {
-      background-color: #ffffff;
-      color: #8c1aff;
-      border: 1px solid #ffffff;
-    }
+  
+  @media screen and(min-width: 450px) {
+    display: none;
+    height: 29px;
   }
 }
 

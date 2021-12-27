@@ -97,6 +97,7 @@ export default {
       tasks: [],
       taskName: "",
       taskDescription: "",
+      today: today,
       taskDueDate: today,
       taskPriority: "Low",
       priorities: ["Low", "Medium", "High"],
