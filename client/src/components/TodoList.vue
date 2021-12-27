@@ -99,7 +99,7 @@ export default {
     },
 
     goToTodo(todo) {
-      this.$router.push(`todo_tasks/${todo.id}`);
+      this.$router.push({name: 'TodoTasks', params: {todoListId: todo.id.toString(), todoListName: todo.name}});
     },
 
     initAddTodo() {

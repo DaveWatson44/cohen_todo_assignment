@@ -1,6 +1,9 @@
 <template>
-  <div class="todoTasks__container">
-    <tasks ></tasks>
+  <div >
+    <div class="header">
+      <h1 class="todoTitle">{{todoListName}}</h1>
+    </div>
+    <tasks class="todoTasks__container" :todoListId="todoListId" :todoListName="todoListName"></tasks>
   </div>
 </template>
 
@@ -8,6 +11,7 @@
 import Tasks from '@/components/Tasks.vue'
 export default {
   components: {Tasks},
+  props: {todoListId: String, todoListName: String},
   data() {
     return {
    
@@ -23,7 +27,24 @@ export default {
 <style lang="scss" scoped>
 
 .todoTasks__container{
-  margin: 0 auto;
+  margin: 20px auto 0 auto;
   width: 640px;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.header {
+  background-color: #8c1aff;
+  font-family: Arial, Helvetica, sans-serif;
+  height: 200px;
+  margin: 0;
+  color: #ffffff;
+  display: flex;
+  align-items: flex-end;
+
+  .todoTitle{
+    width: 640px;
+    margin: 0 auto 10px auto;
+  }
+
 }
 </style>

@@ -1,7 +1,10 @@
 <template>
   <div>
     <div class="taskHeader__container">
-      <h2>Tasks</h2>
+      <div style="width: 0"></div>
+      <button class="" @click="showSortMenu">
+        <font-awesome-icon :icon="['fas', 'sort']" />
+      </button>
       <button class="addTodoButton" @click="initAddTask">
         <font-awesome-icon :icon="['fas', 'plus']" />
       </button>
@@ -66,6 +69,7 @@
           id="description"
           v-model="taskDescription"
           placeholder="Description"
+          class="taskDetails"
         >
         </textarea>
       </div>
@@ -77,6 +81,7 @@
 import Task from "@/components/Task.vue";
 export default {
   components: { Task },
+  props: {todoListId: String},
   mounted() {
     this.getTasks();
   },
@@ -105,7 +110,7 @@ export default {
       this.$axios
         .get("/tasks", {
           params: {
-            todoListId: this.$route.params.id,
+            todoListId: this.todoListId,
           },
         })
         .then((resp) => {
@@ -133,7 +138,7 @@ export default {
       ) {
         this.$axios
           .post("/tasks", {
-            todo_list_id: this.$route.params.id,
+            todo_list_id: this.todoListId,
             name: this.taskName,
             description: this.taskDescription,
             due_date: this.taskDueDate,
@@ -158,6 +163,9 @@ export default {
         console.log("cant submit");
       }
     },
+    showSortMenu(){
+      console.log('show sort')
+    }
   },
 };
 </script>
@@ -166,7 +174,7 @@ export default {
 
 .taskHeader__container {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
 
   h2 {
     margin: 0;
