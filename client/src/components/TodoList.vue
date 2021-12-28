@@ -55,6 +55,7 @@
 
 <script>
 export default {
+  props: {reloadTodoList: Boolean},
   mounted() {
     this.getTodos();
   },
@@ -72,6 +73,13 @@ export default {
   },
 
   watch: {
+    reloadTodoList(){
+      if(this.reloadTodoList == true){
+        this.getTodos();
+        this.$emit('resetReloadTodoListEmitted')
+      }
+    },
+
     newTodoName() {
       if (this.newTodoName.length > 0 && this.newTodoName.length <= 20) {
         this.canSubmit = true;
@@ -136,30 +144,40 @@ export default {
     },
 
     deleteTodo(todo) {
-      this.$axios
-        .delete("/todo_lists", {
-          params: {
-            id: todo.id,
-          },
-        })
-        .then((resp) => {
-          console.log(resp.data);
-          this.getTodos();
-        })
-        .catch((err) => {
-          // Will need to throw alert box that double checks if they want to delete the todo and then wipeout all tasks associated with todo then delte the todo
-          if (err.response.data.error == "23503") {
-            alert("There are still tasks attached to this todo.");
-          } else {
-            console.log(err);
-          }
-        });
+      if(todo.tasks.length > 0){
+        this.$emit('showDeleteTodoEmitted', {todo: todo});
+      } else{
+        this.$axios
+          .delete("/todo_lists", {
+            params: {
+              id: todo.id,
+              tasks: todo.tasks
+            },
+          })
+          .then((resp) => {
+            console.log(resp.data);
+            this.getTodos();
+          })
+          .catch((err) => {
+            // if (err.response.data.error == "23503") {
+              // this.$emit('showDeleteTodoEmitted');
+  
+            // } else {
+              console.log(err);
+            // }
+          });
+      }
+
+
     },
   },
 };
 </script>
 
 <style lang="scss" scoped>
+
+
+
 .todoHeader__container {
   font-family: Arial, Helvetica, sans-serif;
 }

@@ -5,7 +5,7 @@
       <button class="" @click="showSortMenu">
         <font-awesome-icon :icon="['fas', 'sort']" />
       </button>
-      <button class="addTodoButton" @click="initAddTask">
+      <button class="addTodoButton" @click="toggleAddTask">
         <font-awesome-icon :icon="['fas', 'plus']" />
       </button>
     </div>
@@ -18,61 +18,12 @@
       @getTasksEmitted="getTasks()"
     ></task>
     <div v-if="startAddTask || tasks.length < 1" class="newTask__container">
-      <div>
-        <input
-          class="taskField taskName"
-          type="text"
-          id="name"
-          v-model="taskName"
-          ref="taskName"
-          placeholder="Task name."
-        />
-
-        <input
-          class="taskField taskDueDate"
-          type="date"
-          id="dueDate"
-          v-model="taskDueDate"
-        />
-        <select
-          id="priority"
-          v-model="taskPriority"
-          class="taskField taskPriority"
-        >
-          <option
-            v-for="(priority, index) in priorities"
-            :key="index"
-            :value="priority"
-          >
-            {{ priority }}
-          </option>
-        </select>
-
-        <input
-          type="checkbox"
-          v-model="taskIsCompleted"
-          class="taskField taskIsCompleted"
-        />
-        <button
-          :disabled="taskName < 1 || taskDescription < 1"
-          @click="addTask()"
-        >
-          <font-awesome-icon :icon="['fas', 'save']" />
-        </button>
-        <button @click="startAddTask = !startAddTask">
-          <font-awesome-icon style="color: red" :icon="['fas', 'trash-alt']" />
-        </button>
-      </div>
-      <div class="details__section">
-        <textarea
-          type="text"
-          id="description"
-          v-model="taskDescription"
-          placeholder="Description"
-          class="taskDetails"
-        >
-        </textarea>
-      </div>
+      <task
+        :task="newTask"
+        :priorities="priorities"
+        @taskAddedEmitted="resetTaskFields"
+        @toggleAddTaskEmitted="toggleAddTask"
+      ></task>
     </div>
   </div>
 </template>
@@ -81,7 +32,7 @@
 import Task from "@/components/Task.vue";
 export default {
   components: { Task },
-  props: {todoListId: String},
+  props: { todoListId: String },
   mounted() {
     this.getTasks();
   },
@@ -95,6 +46,15 @@ export default {
     return {
       showDetails: false,
       tasks: [],
+      newTask: {
+        todoListId: this.todoListId,
+        name: "",
+        description: "",
+        due_date: today,
+        priority: "Low",
+        is_completed: false,
+        canEdit: false,
+      },
       taskName: "",
       taskDescription: "",
       today: today,
@@ -124,11 +84,22 @@ export default {
         });
     },
 
-    initAddTask() {
+    toggleAddTask() {
       this.startAddTask = !this.startAddTask;
-      this.$nextTick(() => {
-        this.$refs.taskName.focus();
-      });
+      this.resetTaskFields();
+    },
+
+    resetTaskFields() {
+      this.newTask = {
+        todoListId: this.todoListId,
+        name: "",
+        description: "",
+        due_date: this.today,
+        priority: "Low",
+        is_completed: false,
+        canEdit: false,
+      };
+      this.getTasks();
     },
 
     addTask() {
@@ -164,15 +135,14 @@ export default {
         console.log("cant submit");
       }
     },
-    showSortMenu(){
-      console.log('show sort')
-    }
+    showSortMenu() {
+      console.log("show sort");
+    },
   },
 };
 </script>
 
 <style lang='scss' scoped>
-
 .taskHeader__container {
   display: flex;
   justify-content: flex-end;
@@ -180,23 +150,32 @@ export default {
   h2 {
     margin: 0;
   }
+
+  button {
+    padding: 5px 9px;
+    background-color: #8c1aff;
+    color: #ffffff;
+    border: 1px solid #ffffff;
+    &:hover {
+      background-color: #ffffff;
+      border: 1px solid #8c1aff;
+      color: #8c1aff;
+    }
+
+    &:active {
+      background-color: #8c1aff;
+      color: #ffffff;
+      border: 1px solid #ffffff;
+    }
+  }
+}
+
+.addTodoButton {
+  margin-right: 5px;
 }
 
 th {
   text-align: left;
-}
-
-.addTodoButton {
-  color: green;
-  background-color: #ffffff;
-  &:hover {
-    color: #ffffff;
-    background-color: green;
-  }
-  &:active {
-    color: green;
-    background-color: #ffffff;
-  }
 }
 
 .newTask__container {

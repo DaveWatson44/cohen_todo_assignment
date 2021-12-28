@@ -6,8 +6,9 @@
           <input
             type="checkbox"
             v-model="task.is_completed"
-            @change="updateTask(task)"
+            @change.stop="updateTask(task)"
             class="taskField taskIsCompleted"
+            @click="stopProp"
           />
           <input
             :disabled="task.canEdit == false ? task.canEdit : canEdit"
@@ -16,6 +17,7 @@
             v-model="task.name"
             class="taskField taskName"
             placeholder="Task name."
+            ref="taskName"
           />
         </div>
 
@@ -43,17 +45,17 @@
       </div>
       <div class="taskButton__container">
         <button
-          v-if="canEdit"
+          v-if="task.canEdit == false ? task.canEdit : canEdit"
           :disabled="task.name.length < 1 || task.description.length < 1"
           @click="toggleEdit(task)"
           class="taskEditButton"
         >
           <font-awesome-icon :icon="['fas', 'edit']" />
         </button>
-        <button v-else @click="updateTask(task)" class="taskSaveButton">
+        <button v-else @click="task.canEdit == false ? addTask(task) : updateTask(task)" class="taskSaveButton">
           <font-awesome-icon :icon="['fas', 'save']" />
         </button>
-        <button @click="deleteTask(task.id)" class="taskDeleteButton">
+        <button @click="task.canEdit == false ? emitToggleAddTask() : deleteTask(task.id)" class="taskDeleteButton">
           <font-awesome-icon :icon="['fas', 'times']" />
         </button>
       </div>
@@ -79,7 +81,7 @@
       v-model="task.due_date"
       class="taskField taskDueDateMobile"
     />
-    <div v-show="showDetails" class="details__section">
+    <div v-show="showDetails || task.canEdit == false" class="details__section">
       <textarea
         :disabled="task.canEdit == false ? task.canEdit : canEdit"
         type="text"
@@ -90,19 +92,20 @@
       >
       </textarea>
     </div>
+
     <div class="taskButtonMobile__container">
       <button
-        v-if="canEdit"
+        v-if="task.canEdit == false ? task.canEdit : canEdit"
         :disabled="task.name.length < 1 || task.description.length < 1"
         @click="toggleEdit(task)"
         class="taskEditButton"
       >
         <font-awesome-icon :icon="['fas', 'edit']" />
       </button>
-      <button v-else @click="updateTask(task)" class="taskSaveButton">
+      <button v-else @click="task.canEdit == false ? addTask(task) : updateTask(task)" class="taskSaveButton">
         <font-awesome-icon :icon="['fas', 'save']" />
       </button>
-      <button @click="deleteTask(task.id)" class="taskDeleteButton">
+      <button @click="task.canEdit == false ? emitToggleAddTask() : deleteTask(task.id)" class="taskDeleteButton">
         <font-awesome-icon :icon="['fas', 'times']" />
       </button>
     </div>
@@ -114,6 +117,12 @@ export default {
   props: {
     task: Object,
     priorities: Array,
+  },
+
+  mounted(){
+    if(this.task.canEdit == false){
+      this.$refs.taskName.focus();
+    }
   },
 
   data() {
@@ -132,6 +141,10 @@ export default {
         this.showDetails = true;
         this.canEdit = !this.canEdit;
       }
+    },
+
+    stopProp(e){
+      e.stopPropagation();
     },
 
     updateTask(task) {
@@ -167,6 +180,43 @@ export default {
         this.toggleShowDetails();
       }
     },
+
+    emitToggleAddTask(){
+      this.$emit('toggleAddTaskEmitted');
+    },
+
+addTask(task) {
+      if (
+        task.name.length > 0 &&
+        task.name.length <= 20 &&
+        task.description.length > 1
+      ) {
+        this.$axios
+          .post("/tasks", {
+            todo_list_id: task.todoListId,
+            name: task.name,
+            description: task.description,
+            due_date: task.due_date,
+            priority: task.priority,
+            is_completed: task.is_completed,
+          })
+          .then((resp) => {
+            console.log(resp.data);
+            this.$emit('taskAddedEmitted');
+         
+            this.$nextTick(() => {
+              this.$refs.taskName.focus();
+            });
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      } else {
+        console.log("cant submit");
+      }
+    },
+
+
   },
 };
 </script>
@@ -192,7 +242,6 @@ export default {
   width: 95%;
   justify-content: space-between;
 
-
   @media screen and (min-width: 450px) {
     justify-content: space-between;
     width: 80%;
@@ -212,7 +261,7 @@ export default {
     border-bottom: 1px solid black;
   }
   @media screen and (min-width: 500px) {
-  }
+    }
 }
 
 .taskDueDate {
@@ -292,7 +341,6 @@ button {
   display: flex;
   justify-content: flex-end;
 
-  
   @media screen and(min-width: 450px) {
     display: none;
     height: 29px;

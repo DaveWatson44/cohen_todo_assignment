@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const pg = require('../db/postgresquery');
 const { createTodoListsSQL, getTodoListsSQL, updateTodoListSQL, deleteTodoListSQL, getTodoListAndTasksSQL, updateTodosSQL } = require('../utils/todoListQueries');
-const { getTasksSQL } = require('../utils/tasksQueries');
+const { getTasksSQL, deleteTodoTasksSQL } = require('../utils/tasksQueries');
 const TodoList = require('../blueprints/todoList');
 
 router.get('/todo_lists', async (req, res, next) => {
@@ -97,12 +97,21 @@ router.put('/todo_lists', async (req, res, next) => {
 });
 
 router.delete('/todo_lists', async (req, res, next) => {
-	const sql = deleteTodoListSQL();
-	const values = [req.query.id]
+	const todoSql = deleteTodoListSQL();
+	const tasksSql = deleteTodoTasksSQL();
 	let message = '';
+	console.log(req.query)
+	const tasks = req.query.tasks;
+	const todoId = req.query.id;
+	const values = [todoId];
+
+
 
 	try {
-		await pg.query(sql, values)
+		if (tasks) {
+			await pg.query(tasksSql, values)
+		}
+		await pg.query(todoSql, values)
 		message = "Todo List deleted successfully.";
 		res.status(200).send({ message: message });
 	} catch (err) {
@@ -112,6 +121,23 @@ router.delete('/todo_lists', async (req, res, next) => {
 			error: err.code
 		})
 	}
+
+
+	// else {
+	// 	try {
+	// 		await pg.query(sql, values)
+	// 		message = "Todo List deleted successfully.";
+	// 		res.status(200).send({ message: message });
+	// 	} catch (err) {
+	// 		message = "There was an error deleting the record.";
+	// 		console.log(err)
+	// 		res.status(400).send({
+	// 			error: err.code
+	// 		})
+	// 	}
+
+	// }
+
 });
 
 module.exports = router;
