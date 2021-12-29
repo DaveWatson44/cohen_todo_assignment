@@ -33,7 +33,7 @@ router.get('/todos_info', async (req, res, next) => {
 		let todoInfo = [];
 
 		for (let todoList of todoLists) {
-			let todo = new TodoList(todoList.id, todoList.name, todoList.is_completed)
+			let todo = new TodoList(todoList.id, todoList.name, todoList.isCompleted)
 			let tasks = await todo.tasks;
 			let completedTasks = await todo.completedTasks;
 

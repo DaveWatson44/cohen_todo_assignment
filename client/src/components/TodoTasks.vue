@@ -123,12 +123,12 @@ export default {
       ) {
         this.$axios
           .post("/tasks", {
-            todo_list_id: this.$route.params.id,
+            todoListId: this.$route.params.id,
             name: this.taskName,
             description: this.taskDescription,
-            due_date: this.taskDueDate,
+            dueDate: this.taskDueDate,
             priority: this.taskPriority,
-            is_completed: this.taskIsCompleted,
+            isCompleted: this.taskIsCompleted,
           })
           .then((resp) => {
             console.log(resp.data);

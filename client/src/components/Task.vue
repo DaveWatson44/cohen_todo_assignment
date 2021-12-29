@@ -5,7 +5,7 @@
         <div style="display: flex; align-items: center">
           <input
             type="checkbox"
-            v-model="task.is_completed"
+            v-model="task.isCompleted"
             @change.stop="updateTask(task)"
             class="taskField taskIsCompleted"
             @click="stopProp"
@@ -25,7 +25,7 @@
           :disabled="task.canEdit == false ? task.canEdit : canEdit"
           type="date"
           id="dueDate"
-          v-model="task.due_date"
+          v-model="task.dueDate"
           class="taskField taskDueDate"
         />
         <select
@@ -78,7 +78,7 @@
       :disabled="task.canEdit == false ? task.canEdit : canEdit"
       type="date"
       id="dueDate"
-      v-model="task.due_date"
+      v-model="task.dueDate"
       class="taskField taskDueDateMobile"
     />
     <div v-show="showDetails || task.canEdit == false" class="details__section">
@@ -134,7 +134,7 @@ export default {
 
   methods: {
     toggleEdit(task) {
-      if (task.is_completed == true) {
+      if (task.isCompleted == true) {
         return;
       } else {
         console.log(this.showDetails);
@@ -193,12 +193,12 @@ addTask(task) {
       ) {
         this.$axios
           .post("/tasks", {
-            todo_list_id: task.todoListId,
+            todoListId: task.todoListId,
             name: task.name,
             description: task.description,
-            due_date: task.due_date,
+            dueDate: task.dueDate,
             priority: task.priority,
-            is_completed: task.is_completed,
+            isCompleted: task.isCompleted,
           })
           .then((resp) => {
             console.log(resp.data);

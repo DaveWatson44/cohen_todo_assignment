@@ -23,7 +23,7 @@ router.get('/tasks', async (req, res, next) => {
 
 router.post('/tasks', async (req, res, next) => {
 	const sql = createTaskSQL();
-	const values = [req.body.todo_list_id, req.body.name, req.body.description, req.body.due_date, req.body.priority, req.body.is_completed];
+	const values = [req.body.todoListId, req.body.name, req.body.description, req.body.dueDate, req.body.priority, req.body.isCompleted];
 	let message = '';
 
 	try {
@@ -51,8 +51,6 @@ router.put('/tasks', async (req, res, next) => {
     }
 
 	try {
-		console.log(sql)
-		console.log(values)
 		await pg.query(sql, values)
 		message = "Task updated successfully.";
 		res.status(200).send({message: message});

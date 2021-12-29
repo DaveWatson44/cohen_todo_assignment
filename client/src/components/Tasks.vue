@@ -50,9 +50,9 @@ export default {
         todoListId: this.todoListId,
         name: "",
         description: "",
-        due_date: today,
+        dueDate: today,
         priority: "Low",
-        is_completed: false,
+        isCompleted: false,
         canEdit: false,
       },
       taskName: "",
@@ -94,9 +94,9 @@ export default {
         todoListId: this.todoListId,
         name: "",
         description: "",
-        due_date: this.today,
+        dueDate: this.today,
         priority: "Low",
-        is_completed: false,
+        isCompleted: false,
         canEdit: false,
       };
       this.getTasks();
@@ -110,12 +110,12 @@ export default {
       ) {
         this.$axios
           .post("/tasks", {
-            todo_list_id: this.todoListId,
+            todoListId: this.todoListId,
             name: this.taskName,
             description: this.taskDescription,
-            due_date: this.taskDueDate,
+            dueDate: this.taskDueDate,
             priority: this.taskPriority,
-            is_completed: this.taskIsCompleted,
+            isCompleted: this.taskIsCompleted,
           })
           .then((resp) => {
             console.log(resp.data);
