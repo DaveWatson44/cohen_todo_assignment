@@ -1,8 +1,5 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Todos from '@/views/Todos.vue'
-import TodoTasks from '@/views/TodoTasks.vue'
-
 
 Vue.use(VueRouter)
 
@@ -10,12 +7,12 @@ const routes = [
   {
     path: '/',
     name: 'Todos',
-    component: Todos
+    component: () => import(/* webpackChunkName: "todos" */ '../views/Todos.vue')
   },
   {
     path: '/todo_tasks/:todoListId/:todoListName',
     name: 'TodoTasks',
-    component: TodoTasks,
+    component: () => import(/* webpackChunkName: "todoTasks" */ '../views/TodoTasks.vue'),
     props: true
   },
 ]

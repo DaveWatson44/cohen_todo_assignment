@@ -2,9 +2,6 @@
   <div>
     <div class="taskHeader__container">
       <div style="width: 0"></div>
-      <button class="" @click="showSortMenu">
-        <font-awesome-icon :icon="['fas', 'sort']" />
-      </button>
       <button class="addTodoButton" @click="toggleAddTask">
         <font-awesome-icon :icon="['fas', 'plus']" />
       </button>
@@ -17,7 +14,7 @@
       :priorities="priorities"
       @getTasksEmitted="getTasks()"
     ></task>
-    <div v-if="startAddTask || tasks.length < 1" class="newTask__container">
+    <div v-if="startAddTask" class="newTask__container">
       <task
         :task="newTask"
         :priorities="priorities"
@@ -76,8 +73,10 @@ export default {
         })
         .then((resp) => {
           let tasks = resp.data;
-
           this.tasks = tasks;
+          if(tasks.length < 1){
+            this.startAddTask = true;
+          }
         })
         .catch((err) => {
           console.log(err);

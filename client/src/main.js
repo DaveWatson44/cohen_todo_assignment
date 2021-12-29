@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
-import store from './store'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import axios from "@/axios";
 import { library } from "@fortawesome/fontawesome-svg-core";
@@ -29,7 +28,6 @@ Vue.config.productionTip = false
 
 new Vue({
   router,
-  store,
   axios,
   FontAwesomeIcon,
   render: h => h(App)

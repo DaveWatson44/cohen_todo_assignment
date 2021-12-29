@@ -52,10 +52,19 @@
         >
           <font-awesome-icon :icon="['fas', 'edit']" />
         </button>
-        <button v-else @click="task.isNew == true ? addTask(task) : updateTask(task)" class="taskSaveButton">
+        <button
+          v-else
+          @click="task.isNew == true ? addTask(task) : updateTask(task)"
+          class="taskSaveButton"
+        >
           <font-awesome-icon :icon="['fas', 'save']" />
         </button>
-        <button @click="task.isNew == true ? emitToggleAddTask() : deleteTask(task.id)" class="taskDeleteButton">
+        <button
+          @click="
+            task.isNew == true ? emitToggleAddTask() : deleteTask(task.id)
+          "
+          class="taskDeleteButton"
+        >
           <font-awesome-icon :icon="['fas', 'times']" />
         </button>
       </div>
@@ -102,10 +111,17 @@
       >
         <font-awesome-icon :icon="['fas', 'edit']" />
       </button>
-      <button v-else @click="task.isNew == true ? addTask(task) : updateTask(task)" class="taskSaveButton">
+      <button
+        v-else
+        @click="task.isNew == true ? addTask(task) : updateTask(task)"
+        class="taskSaveButton"
+      >
         <font-awesome-icon :icon="['fas', 'save']" />
       </button>
-      <button @click="task.isNew == true ? emitToggleAddTask() : deleteTask(task.id)" class="taskDeleteButton">
+      <button
+        @click="task.isNew == true ? emitToggleAddTask() : deleteTask(task.id)"
+        class="taskDeleteButton"
+      >
         <font-awesome-icon :icon="['fas', 'times']" />
       </button>
     </div>
@@ -119,8 +135,8 @@ export default {
     priorities: Array,
   },
 
-  mounted(){
-    if(this.task.isNew == true){
+  mounted() {
+    if (this.task.isNew == true) {
       this.$refs.taskName.focus();
     }
   },
@@ -143,7 +159,7 @@ export default {
       }
     },
 
-    stopProp(e){
+    stopProp(e) {
       e.stopPropagation();
     },
 
@@ -181,11 +197,11 @@ export default {
       }
     },
 
-    emitToggleAddTask(){
-      this.$emit('toggleAddTaskEmitted');
+    emitToggleAddTask() {
+      this.$emit("toggleAddTaskEmitted");
     },
 
-addTask(task) {
+    addTask(task) {
       if (
         task.name.length > 0 &&
         task.name.length <= 20 &&
@@ -202,8 +218,8 @@ addTask(task) {
           })
           .then((resp) => {
             console.log(resp.data);
-            this.$emit('taskAddedEmitted');
-         
+            this.$emit("taskAddedEmitted");
+
             this.$nextTick(() => {
               this.$refs.taskName.focus();
             });
@@ -215,8 +231,6 @@ addTask(task) {
         console.log("cant submit");
       }
     },
-
-
   },
 };
 </script>
@@ -261,7 +275,7 @@ addTask(task) {
     border-bottom: 1px solid black;
   }
   @media screen and (min-width: 500px) {
-    }
+  }
 }
 
 .taskDueDate {
