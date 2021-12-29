@@ -11,7 +11,7 @@
             @click="stopProp"
           />
           <input
-            :disabled="task.isNew == true ? false : canEdit"
+            :disabled="task.isNew == true ? false : isDisabled"
             type="text"
             id="name"
             v-model="task.name"
@@ -22,14 +22,14 @@
         </div>
 
         <input
-          :disabled="task.isNew == true ? false : canEdit"
+          :disabled="task.isNew == true ? false : isDisabled"
           type="date"
           id="dueDate"
           v-model="task.dueDate"
           class="taskField taskDueDate"
         />
         <select
-          :disabled="task.isNew == true ? false : canEdit"
+          :disabled="task.isNew == true ? false : isDisabled"
           id="priority"
           v-model="task.priority"
           class="taskField taskPriority"
@@ -45,7 +45,7 @@
       </div>
       <div class="taskButton__container">
         <button
-          v-if="task.isNew == true ? false : canEdit"
+          v-if="task.isNew == true ? false : isDisabled"
           :disabled="task.name.length < 1 || task.description.length < 1"
           @click="toggleEdit(task)"
           class="taskEditButton"
@@ -61,7 +61,7 @@
       </div>
     </div>
     <select
-      :disabled="task.isNew == true ? false : canEdit"
+      :disabled="task.isNew == true ? false : isDisabled"
       id="priority"
       v-model="task.priority"
       class="taskField taskPriorityMobile"
@@ -75,7 +75,7 @@
       </option>
     </select>
     <input
-      :disabled="task.isNew == true ? false : canEdit"
+      :disabled="task.isNew == true ? false : isDisabled"
       type="date"
       id="dueDate"
       v-model="task.dueDate"
@@ -83,7 +83,7 @@
     />
     <div v-show="showDetails || task.isNew == true" class="details__section">
       <textarea
-        :disabled="task.isNew == true ? false : canEdit"
+        :disabled="task.isNew == true ? false : isDisabled"
         type="text"
         id="description"
         v-model="task.description"
@@ -95,7 +95,7 @@
 
     <div class="taskButtonMobile__container">
       <button
-        v-if="task.isNew == true ? false : canEdit"
+        v-if="task.isNew == true ? false : isDisabled"
         :disabled="task.name.length < 1 || task.description.length < 1"
         @click="toggleEdit(task)"
         class="taskEditButton"
@@ -127,7 +127,7 @@ export default {
 
   data() {
     return {
-      canEdit: true,
+      isDisabled: true,
       showDetails: false,
     };
   },
@@ -139,7 +139,7 @@ export default {
       } else {
         console.log(this.showDetails);
         this.showDetails = true;
-        this.canEdit = !this.canEdit;
+        this.isDisabled = !this.isDisabled;
       }
     },
 
@@ -153,7 +153,7 @@ export default {
         .then((resp) => {
           this.$emit("getTasksEmitted");
           console.log(resp.data);
-          this.canEdit = true;
+          this.isDisabled = true;
           this.showDetails = false;
         })
         .catch((err) => {
@@ -176,7 +176,7 @@ export default {
       this.showDetails = !this.showDetails;
     },
     activateShowDetails() {
-      if (this.canEdit) {
+      if (this.isDisabled) {
         this.toggleShowDetails();
       }
     },
