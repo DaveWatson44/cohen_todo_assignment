@@ -53,7 +53,7 @@ export default {
         dueDate: today,
         priority: "Low",
         isCompleted: false,
-        canEdit: false,
+        isNew: true,
       },
       taskName: "",
       taskDescription: "",
@@ -97,7 +97,7 @@ export default {
         dueDate: this.today,
         priority: "Low",
         isCompleted: false,
-        canEdit: false,
+        isNew: true,
       };
       this.getTasks();
     },

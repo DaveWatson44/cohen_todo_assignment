@@ -11,7 +11,7 @@
             @click="stopProp"
           />
           <input
-            :disabled="task.canEdit == false ? task.canEdit : canEdit"
+            :disabled="task.isNew == true ? false : canEdit"
             type="text"
             id="name"
             v-model="task.name"
@@ -22,14 +22,14 @@
         </div>
 
         <input
-          :disabled="task.canEdit == false ? task.canEdit : canEdit"
+          :disabled="task.isNew == true ? false : canEdit"
           type="date"
           id="dueDate"
           v-model="task.dueDate"
           class="taskField taskDueDate"
         />
         <select
-          :disabled="task.canEdit == false ? task.canEdit : canEdit"
+          :disabled="task.isNew == true ? false : canEdit"
           id="priority"
           v-model="task.priority"
           class="taskField taskPriority"
@@ -45,23 +45,23 @@
       </div>
       <div class="taskButton__container">
         <button
-          v-if="task.canEdit == false ? task.canEdit : canEdit"
+          v-if="task.isNew == true ? false : canEdit"
           :disabled="task.name.length < 1 || task.description.length < 1"
           @click="toggleEdit(task)"
           class="taskEditButton"
         >
           <font-awesome-icon :icon="['fas', 'edit']" />
         </button>
-        <button v-else @click="task.canEdit == false ? addTask(task) : updateTask(task)" class="taskSaveButton">
+        <button v-else @click="task.isNew == true ? addTask(task) : updateTask(task)" class="taskSaveButton">
           <font-awesome-icon :icon="['fas', 'save']" />
         </button>
-        <button @click="task.canEdit == false ? emitToggleAddTask() : deleteTask(task.id)" class="taskDeleteButton">
+        <button @click="task.isNew == true ? emitToggleAddTask() : deleteTask(task.id)" class="taskDeleteButton">
           <font-awesome-icon :icon="['fas', 'times']" />
         </button>
       </div>
     </div>
     <select
-      :disabled="task.canEdit == false ? task.canEdit : canEdit"
+      :disabled="task.isNew == true ? false : canEdit"
       id="priority"
       v-model="task.priority"
       class="taskField taskPriorityMobile"
@@ -75,15 +75,15 @@
       </option>
     </select>
     <input
-      :disabled="task.canEdit == false ? task.canEdit : canEdit"
+      :disabled="task.isNew == true ? false : canEdit"
       type="date"
       id="dueDate"
       v-model="task.dueDate"
       class="taskField taskDueDateMobile"
     />
-    <div v-show="showDetails || task.canEdit == false" class="details__section">
+    <div v-show="showDetails || task.isNew == true" class="details__section">
       <textarea
-        :disabled="task.canEdit == false ? task.canEdit : canEdit"
+        :disabled="task.isNew == true ? false : canEdit"
         type="text"
         id="description"
         v-model="task.description"
@@ -95,17 +95,17 @@
 
     <div class="taskButtonMobile__container">
       <button
-        v-if="task.canEdit == false ? task.canEdit : canEdit"
+        v-if="task.isNew == true ? false : canEdit"
         :disabled="task.name.length < 1 || task.description.length < 1"
         @click="toggleEdit(task)"
         class="taskEditButton"
       >
         <font-awesome-icon :icon="['fas', 'edit']" />
       </button>
-      <button v-else @click="task.canEdit == false ? addTask(task) : updateTask(task)" class="taskSaveButton">
+      <button v-else @click="task.isNew == true ? addTask(task) : updateTask(task)" class="taskSaveButton">
         <font-awesome-icon :icon="['fas', 'save']" />
       </button>
-      <button @click="task.canEdit == false ? emitToggleAddTask() : deleteTask(task.id)" class="taskDeleteButton">
+      <button @click="task.isNew == true ? emitToggleAddTask() : deleteTask(task.id)" class="taskDeleteButton">
         <font-awesome-icon :icon="['fas', 'times']" />
       </button>
     </div>
@@ -120,7 +120,7 @@ export default {
   },
 
   mounted(){
-    if(this.task.canEdit == false){
+    if(this.task.isNew == true){
       this.$refs.taskName.focus();
     }
   },
