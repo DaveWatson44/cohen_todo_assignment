@@ -4,16 +4,28 @@ const pg = require('../db/postgresquery');
 const { createTaskSQL, getTasksSQL, updateTaskSQL, deleteTaskSQL } = require('../utils/tasksQueries');
 
 router.get('/tasks', async (req, res, next) => {
-	const sql = getTasksSQL();
-	const values = [req.query.todoListId]
+	let sql = ''
+	const todoListId = req.query.todoListId;
+	const sort = req.query.sortValue;
 	let message = "There was an error retrieving the records.";
+	let values = []
+	if (sort) {
+		values = [todoListId]
+		sql = getTasksSQL(sort);
+	} else {
+		values = [todoListId]
+		sql = getTasksSQL();
+	}
 
 	try {
+		console.log(sql)
+		console.log(values)
 		const results = await pg.query(sql, values)
-        const tasks = results.rows;
-		
+		const tasks = results.rows;
+		console.log(tasks)
+
 		res.status(200).send(tasks);
-	} catch(err) {
+	} catch (err) {
 		console.log(err)
 		res.status(400).send({
 			message: message
@@ -29,8 +41,8 @@ router.post('/tasks', async (req, res, next) => {
 	try {
 		await pg.query(sql, values)
 		message = "Task added successfully.";
-		res.status(200).send({message: message});
-	} catch(err) {
+		res.status(200).send({ message: message });
+	} catch (err) {
 		message = "There was an error adding the record. Please make sure the task name doesn't already exist.";
 		console.log(err)
 		res.status(400).send({
@@ -40,23 +52,23 @@ router.post('/tasks', async (req, res, next) => {
 });
 
 router.put('/tasks', async (req, res, next) => {
-    const updateData = req.body;
-    const values = [];
-    const sql = updateTaskSQL(updateData);
-    let message = '';
+	const updateData = req.body;
+	const values = [];
+	const sql = updateTaskSQL(updateData);
+	let message = '';
 
-    for(val in updateData){
-        let value = updateData[val];
-        values.push(value);
-    }
+	for (val in updateData) {
+		let value = updateData[val];
+		values.push(value);
+	}
 
 	try {
 		console.log(sql)
 		console.log(values)
 		await pg.query(sql, values)
 		message = "Task updated successfully.";
-		res.status(200).send({message: message});
-	} catch(err) {
+		res.status(200).send({ message: message });
+	} catch (err) {
 		message = "There was an error editing the record.";
 		console.log(err)
 		res.status(400).send({
@@ -66,13 +78,13 @@ router.put('/tasks', async (req, res, next) => {
 });
 
 router.delete('/tasks', async (req, res, next) => {
-    const sql = deleteTaskSQL();
-    const values = [req.query.id]
-    try {
+	const sql = deleteTaskSQL();
+	const values = [req.query.id]
+	try {
 		await pg.query(sql, values)
 		message = "Task deleted successfully.";
-		res.status(200).send({message: message});
-	} catch(err) {
+		res.status(200).send({ message: message });
+	} catch (err) {
 		message = "There was an error deleting the record.";
 		console.log(err)
 		res.status(400).send({

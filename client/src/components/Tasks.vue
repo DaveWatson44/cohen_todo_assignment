@@ -1,7 +1,17 @@
 <template>
   <div>
     <div class="taskHeader__container">
-      <div style="width: 0"></div>
+      <div v-for="(sortOption, index) in sortOptions" :key="index">
+        <input
+          type="radio"
+          value=""
+          text="ads"
+          :id="sortOption.name"
+          @click="getTasks(sortOption.value)"
+          name="sortOptions"
+        />
+        <label :for="sortOption.text">{{ sortOption.text }}</label>
+      </div>
       <button class="" @click="showSortMenu">
         <font-awesome-icon :icon="['fas', 'sort']" />
       </button>
@@ -44,6 +54,11 @@ export default {
     const year = date.getFullYear();
     const today = `${year}-${month}-${day}`;
     return {
+      sortOptions: [
+        { text: "Name", value: "name" },
+        { text: "Due Date", value: "due_date" },
+        { text: "Priority", value: "priority" },
+      ],
       showDetails: false,
       tasks: [],
       newTask: {
@@ -67,11 +82,13 @@ export default {
   },
 
   methods: {
-    getTasks() {
+    getTasks(sortValue) {
+      console.log(sortValue);
       this.$axios
         .get("/tasks", {
           params: {
             todoListId: this.todoListId,
+            sortValue: sortValue,
           },
         })
         .then((resp) => {

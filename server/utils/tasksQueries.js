@@ -1,7 +1,11 @@
 module.exports = {
 
-    getTasksSQL: function(){
-        return "SELECT *, to_char( due_date, 'YYYY-MM-DD') AS due_date FROM tasks WHERE todo_list_id = $1 ORDER BY is_completed, tasks.id"
+    getTasksSQL: function(sort){
+        if(sort){
+            return `SELECT *, to_char( due_date, 'YYYY-MM-DD') AS due_date FROM tasks WHERE todo_list_id = $1 ORDER BY tasks.${sort} DESC`
+        } else{
+            return "SELECT *, to_char( due_date, 'YYYY-MM-DD') AS due_date FROM tasks WHERE todo_list_id = $1 ORDER BY is_completed, tasks.id"
+        }
     },
 
     getCompletedTasksSQL(){
