@@ -1,30 +1,59 @@
 <template>
-  <div>
+  <div class="todoTasksView__container">
+    <todo-alert
+      v-if="showAlert"
+      :bgColor="alertBgColor"
+      :message="alertMessage"
+      :textColor="alertTextColor"
+      @hideAlertEmitted="hideTodoAlert"
+    ></todo-alert>
     <div class="header">
       <h1 class="todoTitle">{{ todoListName }}</h1>
     </div>
-    <tasks
+    <todo-tasks
       class="todoTasks__container"
       :todoListId="todoListId"
       :todoListName="todoListName"
-    ></tasks>
+      @showAlertEmitted="showTodoAlert"
+    ></todo-tasks>
   </div>
 </template>
 
 <script>
-import Tasks from "@/components/Tasks.vue";
+import TodoTasks from "@/components/TodoTasks.vue";
+import TodoAlert from "@/components/TodoAlert.vue";
 export default {
-  components: { Tasks },
+  components: { TodoTasks, TodoAlert },
   props: { todoListId: String, todoListName: String },
   data() {
-    return {};
+    return {
+      showAlert: false,
+      alertMessage: "",
+      alertTextColor: "",
+      alertBgColor: "",
+    };
   },
 
-  methods: {},
+  methods: {
+    showTodoAlert(payload) {
+      this.alertMessage = payload.alertMessage;
+      this.alertTextColor = payload.alertTextColor;
+      this.alertBgColor = payload.alertBgColor;
+      this.showAlert = true;
+    },
+    hideTodoAlert() {
+      this.showAlert = false;
+    },
+  },
 };
 </script>
 
 <style lang="scss" scoped>
+
+.todoTasksView__container{
+  position: relative;
+}
+
 .todoTasks__container {
   margin: 20px auto 0 auto;
   font-family: Arial, Helvetica, sans-serif;

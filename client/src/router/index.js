@@ -6,8 +6,8 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
-    name: 'Todos',
-    component: () => import(/* webpackChunkName: "todos" */ '../views/Todos.vue')
+    name: 'TodoList',
+    component: () => import(/* webpackChunkName: "todos" */ '../views/TodoList.vue')
   },
   {
     path: '/todo_tasks/:todoListId/:todoListName',
