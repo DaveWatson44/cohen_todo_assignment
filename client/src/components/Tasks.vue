@@ -74,7 +74,7 @@ export default {
         .then((resp) => {
           let tasks = resp.data;
           this.tasks = tasks;
-          if(tasks.length < 1){
+          if (tasks.length < 1) {
             this.startAddTask = true;
           }
         })
@@ -133,9 +133,6 @@ export default {
       } else {
         console.log("cant submit");
       }
-    },
-    showSortMenu() {
-      console.log("show sort");
     },
   },
 };

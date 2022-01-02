@@ -13,7 +13,6 @@ module.exports = {
     // },
 
     updateTodosSQL: function(records){
-        console.log(records)
         let sql = 'UPDATE todo_lists SET ';
         const fields = Object.keys(records);
         const whereClause = `WHERE id = $1;`

@@ -100,12 +100,9 @@ router.delete('/todo_lists', async (req, res, next) => {
 	const todoSql = deleteTodoListSQL();
 	const tasksSql = deleteTodoTasksSQL();
 	let message = '';
-	console.log(req.query)
 	const tasks = req.query.tasks;
 	const todoId = req.query.id;
 	const values = [todoId];
-
-
 
 	try {
 		if (tasks) {
@@ -121,22 +118,6 @@ router.delete('/todo_lists', async (req, res, next) => {
 			error: err.code
 		})
 	}
-
-
-	// else {
-	// 	try {
-	// 		await pg.query(sql, values)
-	// 		message = "Todo List deleted successfully.";
-	// 		res.status(200).send({ message: message });
-	// 	} catch (err) {
-	// 		message = "There was an error deleting the record.";
-	// 		console.log(err)
-	// 		res.status(400).send({
-	// 			error: err.code
-	// 		})
-	// 	}
-
-	// }
 
 });
 

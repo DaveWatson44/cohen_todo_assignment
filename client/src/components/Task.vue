@@ -153,7 +153,6 @@ export default {
       if (task.isCompleted == true) {
         return;
       } else {
-        console.log(this.showDetails);
         this.showDetails = true;
         this.isDisabled = !this.isDisabled;
       }
@@ -168,7 +167,6 @@ export default {
         .put("/tasks", task)
         .then((resp) => {
           this.$emit("getTasksEmitted");
-          console.log(resp.data);
           this.isDisabled = true;
           this.showDetails = false;
         })

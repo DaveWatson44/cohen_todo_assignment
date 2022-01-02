@@ -95,7 +95,6 @@ export default {
         .get("/todos_info")
         .then((resp) => {
           let todos = resp.data;
-          console.log(todos);
           let sortedTodos = todos.sort(
             (todoOne, todoTwo) => todoOne.isCompleted - todoTwo.isCompleted
           );
