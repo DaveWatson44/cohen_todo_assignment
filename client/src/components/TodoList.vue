@@ -13,7 +13,7 @@
         <button class="addTodo__button" @click="addTodo"><font-awesome-icon :icon="['fas', 'plus']" /></button>
       </div>
         <p class="error" v-if="showNameTakenError">
-          This name is already in another todo.
+          This name is already taken.
         </p>
         <p class="error" v-if="showExceedsLengthError">
           This name is too long.

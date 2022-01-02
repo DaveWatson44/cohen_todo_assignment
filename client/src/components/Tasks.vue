@@ -36,9 +36,16 @@ export default {
 
   data() {
     const date = new Date();
-    const month = date.getMonth() + 1;
-    const day = date.getDate();
+    let month = date.getMonth() + 1;
+    let day = date.getDate();
     const year = date.getFullYear();
+    if (month < 10) {
+      month = `0${month}`;
+    }
+
+    if (day < 10) {
+      day = `0${day}`;
+    }
     const today = `${year}-${month}-${day}`;
     return {
       showDetails: false,
@@ -99,40 +106,6 @@ export default {
         isNew: true,
       };
       this.getTasks();
-    },
-
-    addTask() {
-      if (
-        this.taskName.length > 0 &&
-        this.taskName.length <= 20 &&
-        this.taskDescription.length > 1
-      ) {
-        this.$axios
-          .post("/tasks", {
-            todoListId: this.todoListId,
-            name: this.taskName,
-            description: this.taskDescription,
-            dueDate: this.taskDueDate,
-            priority: this.taskPriority,
-            isCompleted: this.taskIsCompleted,
-          })
-          .then((resp) => {
-            console.log(resp.data);
-            (this.taskName = ""),
-              (this.taskDescription = ""),
-              (this.taskDueDate = this.today),
-              (this.taskPriority = "Low"),
-              this.getTasks();
-            this.$nextTick(() => {
-              this.$refs.taskName.focus();
-            });
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      } else {
-        console.log("cant submit");
-      }
     },
   },
 };

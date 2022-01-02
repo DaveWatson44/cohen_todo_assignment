@@ -166,6 +166,7 @@ export default {
       this.$axios
         .put("/tasks", task)
         .then((resp) => {
+          console.log(resp)
           this.$emit("getTasksEmitted");
           this.isDisabled = true;
           this.showDetails = false;
@@ -226,6 +227,7 @@ export default {
             console.log(err);
           });
       } else {
+        //add alert or error message saying why the user cannot submit
         console.log("cant submit");
       }
     },
