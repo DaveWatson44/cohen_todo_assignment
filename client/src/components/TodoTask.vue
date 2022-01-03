@@ -209,7 +209,7 @@ export default {
     toggleShowDetails() {
       this.showDetails = !this.showDetails;
     },
-    
+
     activateShowDetails() {
       if (this.isDisabled) {
         this.toggleShowDetails();
@@ -247,13 +247,11 @@ export default {
             let errorMessage = err.response.data.message;
             console.log(err);
             this.emitShowAlert({
-              alertTextColor: "#ffffff",
               alertMessage: errorMessage,
             });
           });
       } else {
         this.emitShowAlert({
-          alertTextColor: "#ffffff",
           alertMessage: "Cannot submit. Please check name and description",
         });
       }

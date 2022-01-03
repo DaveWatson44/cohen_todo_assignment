@@ -6,15 +6,6 @@
         <font-awesome-icon :icon="['fas', 'plus']" />
       </button>
     </div>
-
-    <todo-task
-      v-for="(task, index) in tasks"
-      :key="index"
-      :task="task"
-      :priorities="priorities"
-      @getTasksEmitted="getTasks()"
-      @showAlertEmitted="emitShowAlert"
-    ></todo-task>
     <div v-if="startAddTask" class="newTask__container">
       <todo-task
         :task="newTask"
@@ -24,6 +15,14 @@
         @showAlertEmitted="emitShowAlert"
       ></todo-task>
     </div>
+    <todo-task
+      v-for="(task, index) in tasks"
+      :key="index"
+      :task="task"
+      :priorities="priorities"
+      @getTasksEmitted="getTasks()"
+      @showAlertEmitted="emitShowAlert"
+    ></todo-task>
   </div>
 </template>
 
@@ -41,7 +40,7 @@ export default {
     let month = date.getMonth() + 1;
     let day = date.getDate();
     const year = date.getFullYear();
-    let today = '';
+    let today = "";
 
     if (month < 10) {
       month = `0${month}`;
@@ -94,7 +93,7 @@ export default {
           console.log(err);
         });
     },
-    
+
     emitShowAlert(payload) {
       this.$emit("showAlertEmitted", {
         alertTextColor: payload.alertTextColor,

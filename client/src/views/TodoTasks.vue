@@ -82,11 +82,15 @@ export default {
   .todoTitle {
     margin: 0 auto 10px auto;
     width: 90%;
+    overflow: hidden;
+    font-size: 1em;
     @media screen and (min-width: 320px) {
       width: 250px;
+      font-size: 1.5em;
     }
     @media screen and (min-width: 430px) {
       width: 65%;
+      font-size: 1.8em;
     }
     @media screen and (min-width: 630px) {
       width: 640px;

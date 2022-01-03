@@ -1,5 +1,12 @@
 <template>
   <div class="todoList__container">
+    <todo-alert
+      v-if="showAlert"
+      :bgColor="alertBgColor"
+      :message="alertMessage"
+      :textColor="alertTextColor"
+      @hideAlertEmitted="hideTodoAlert"
+    ></todo-alert>
     <div v-if="showDeleteTodoAlert" class="overlay" @click="toggleShowDeleteTodoAlert"></div>
     <div v-if="showDeleteTodoAlert" class="deleteTodoAlert">
       <p>Delete todo and all it's tasks?</p>
@@ -22,17 +29,32 @@
 
 <script>
 import TodoList from "@/components/TodoList.vue";
+import TodoAlert from "@/components/TodoAlert.vue";
 
 export default {
-  components: { TodoList },
+  components: { TodoList, TodoAlert },
   data() {
     return {
       showDeleteTodoAlert: false,
       todo: {},
       reloadTodoList: false,
+      showAlert: false,
+      alertMessage: "",
+      alertTextColor: "",
+      alertBgColor: "",
+      
     };
   },
   methods: {
+    showTodoAlert(payload) {
+      this.alertMessage = payload.alertMessage;
+      this.alertTextColor = payload.alertTextColor;
+      this.alertBgColor = payload.alertBgColor;
+      this.showAlert = true;
+    },
+    hideTodoAlert() {
+      this.showAlert = false;
+    },
     initTodoDeletion(payload){
       const todo = payload.todo;
       this.todo = todo;

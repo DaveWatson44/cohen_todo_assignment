@@ -10,17 +10,18 @@
           @keyup.enter="addTodo"
           ref="todoInput"
         />
-        <button class="addTodo__button" @click="addTodo"><font-awesome-icon :icon="['fas', 'plus']" /></button>
+        <button class="addTodo__button" @click="addTodo">
+          <font-awesome-icon :icon="['fas', 'plus']" />
+        </button>
       </div>
-        <p class="error" v-if="showNameTakenError">
-          This name is already taken.
-        </p>
-        <p class="error" v-if="showExceedsLengthError">
-          This name is too long.
-        </p>
-        <p class="error" v-if="showNoNameError">Please enter a name.</p>
+      <p class="error" v-if="showNameTakenError">This name is already taken.</p>
+      <p class="error" v-if="showExceedsLengthError">This name is too long.</p>
+      <p class="error" v-if="showNoNameError">Please enter a name.</p>
     </div>
-    <div class="todosTable__container">
+    <div v-if="showNoTodosMessage" class="noTodosText__container">
+      <h2>There are no todo lists.</h2>
+    </div>
+    <div v-else class="todosTable__container">
       <table class="todos__container">
         <tr v-for="(todo, index) in todos" :key="index" class="todo__row">
           <td class="todo__cell">
@@ -41,11 +42,10 @@
                 {{ todo.tasks.length }}</span
               >
             </span>
-          
-              <button @click="deleteTodo(todo)" class="todoDelete__button">
-                <font-awesome-icon :icon="['fas', 'times']" />
-              </button>
-           
+
+            <button @click="deleteTodo(todo)" class="todoDelete__button">
+              <font-awesome-icon :icon="['fas', 'times']" />
+            </button>
           </td>
         </tr>
       </table>
@@ -55,7 +55,7 @@
 
 <script>
 export default {
-  props: {reloadTodoList: Boolean},
+  props: { reloadTodoList: Boolean },
   mounted() {
     this.getTodos();
   },
@@ -69,19 +69,20 @@ export default {
       showExceedsLengthError: false,
       showNoNameError: false,
       canSubmit: false,
+      showNoTodosMessage: false,
     };
   },
 
   watch: {
-    reloadTodoList(){
-      if(this.reloadTodoList == true){
+    reloadTodoList() {
+      if (this.reloadTodoList == true) {
         this.getTodos();
-        this.$emit('resetReloadTodoListEmitted')
+        this.$emit("resetReloadTodoListEmitted");
       }
     },
 
     newTodoName() {
-      if (this.newTodoName.length > 0 && this.newTodoName.length <= 20) {
+      if (this.newTodoName.length > 0 && this.newTodoName.length <= 50) {
         this.canSubmit = true;
       } else {
         this.canSubmit = false;
@@ -90,15 +91,28 @@ export default {
   },
 
   methods: {
+     emitShowAlert(payload) {
+      this.$emit("showAlertEmitted", {
+        alertTextColor: payload.alertTextColor,
+        alertBgColor: payload.alertBgColor,
+        alertMessage: payload.alertMessage,
+      });
+    },
     getTodos() {
+      console.log("getting todos");
       this.$axios
         .get("/todos_info")
         .then((resp) => {
           let todos = resp.data;
-          let sortedTodos = todos.sort(
-            (todoOne, todoTwo) => todoOne.isCompleted - todoTwo.isCompleted
-          );
-          this.todos = sortedTodos;
+          if (todos.length < 1) {
+            this.showNoTodosMessage = true;
+          } else {
+            this.showNoTodosMessage = false;
+            let sortedTodos = todos.sort(
+              (todoOne, todoTwo) => todoOne.isCompleted - todoTwo.isCompleted
+            );
+            this.todos = sortedTodos;
+          }
         })
         .catch((err) => {
           console.log(err);
@@ -106,13 +120,9 @@ export default {
     },
 
     goToTodo(todo) {
-      this.$router.push({name: 'TodoTasks', params: {todoListId: todo.id.toString(), todoListName: todo.name}});
-    },
-
-    initAddTodo() {
-      this.addNewTodo = !this.addNewTodo;
-      this.$nextTick(() => {
-        this.$refs.todoInput.focus();
+      this.$router.push({
+        name: "TodoTasks",
+        params: { todoListId: todo.id.toString(), todoListName: todo.name },
       });
     },
 
@@ -120,6 +130,7 @@ export default {
       this.showNameTakenError = false;
       this.showExceedsLengthError = false;
       this.showNoNameError = false;
+      console.log()
       if (this.canSubmit) {
         this.$axios
           .post("/todo_lists", { name: this.newTodoName })
@@ -138,19 +149,24 @@ export default {
           this.showNoNameError = !this.showNoNameError;
         } else if (this.newTodoName.length > 50) {
           this.showExceedsLengthError = !this.showExceedsLengthError;
+        } else{
+          console.log('something else is wrong')
+          console.log(this.showNoNameError)
+          console.log(this.showExceedsLengthError)
+          console.log(this.showNameTakenError)
         }
       }
     },
 
     deleteTodo(todo) {
-      if(todo.tasks.length > 0){
-        this.$emit('showDeleteTodoEmitted', {todo: todo});
-      } else{
+      if (todo.tasks.length > 0) {
+        this.$emit("showDeleteTodoEmitted", { todo: todo });
+      } else {
         this.$axios
           .delete("/todo_lists", {
             params: {
               id: todo.id,
-              tasks: todo.tasks
+              tasks: todo.tasks,
             },
           })
           .then((resp) => {
@@ -158,25 +174,16 @@ export default {
             this.getTodos();
           })
           .catch((err) => {
-            // if (err.response.data.error == "23503") {
-              // this.$emit('showDeleteTodoEmitted');
-  
-            // } else {
-              console.log(err);
-            // }
+            console.log(err);
+            this.emitShowAlert({alertMessage: "Cannot delete. Please refresh the page and try again."});
           });
       }
-
-
     },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-
-
-
 .todoHeader__container {
   font-family: Arial, Helvetica, sans-serif;
 }
@@ -198,17 +205,17 @@ export default {
     padding: 8px 15px;
   }
 
-  .addTodo__button{
+  .addTodo__button {
     color: #8c1aff;
     border: 1px solid #ffffff;
 
-    &:hover{
+    &:hover {
       background-color: #8c1aff;
       color: #ffffff;
       border: 1px solid #ffffff;
     }
 
-    &:active{
+    &:active {
       background-color: #ffffff;
       color: #8c1aff;
       border: 1px solid #ffffff;
@@ -242,13 +249,7 @@ export default {
 .todosTable__container {
   color: black;
   margin-top: 70px;
-  height: 700px;
-  overflow-y: scroll;
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-  &::-webkit-scrollbar {
-    display: none;
-  }
+  padding-bottom: 50px;
 }
 
 .todos__container {
@@ -269,14 +270,16 @@ export default {
   padding: 10px;
 }
 
-
 .todoInfo__container {
   display: flex;
   justify-content: space-between;
-  width: 60%;
+  width: 70%;
 }
 
 .todo__name {
+  overflow: hidden;
+  width: 80px;
+  height: 20px;
   &:hover {
     color: #8c1aff;
   }
@@ -305,5 +308,10 @@ export default {
   background-position: center;
   background-repeat: no-repeat;
   opacity: 0.5;
+}
+
+.noTodosText__container {
+  margin-top: 100px;
+  color: #8c1aff;
 }
 </style>
