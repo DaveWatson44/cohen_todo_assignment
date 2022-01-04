@@ -1,8 +1,8 @@
 <template>
   <div class="task__container">
-    <div class="taskDetails__container">
+    <div class="taskTopRow__container">
       <div class="taskInformation__container" @click="activateShowDetails">
-        <div style="display: flex; align-items: center">
+        <div class="taskCompletedAndName__container">
           <input
             type="checkbox"
             v-model="task.isCompleted"
@@ -184,7 +184,7 @@ export default {
         });
     },
 
-    cancelEdit(){
+    cancelEdit() {
       this.isDisabled = true;
       this.showDetails = false;
     },
@@ -223,7 +223,7 @@ export default {
     addTask(task) {
       if (
         task.name.length > 0 &&
-        task.name.length <= 20 &&
+        task.name.length <= 50 &&
         task.description.length > 0
       ) {
         this.$axios
@@ -270,7 +270,7 @@ export default {
   }
 }
 
-.taskDetails__container {
+.taskTopRow__container {
   display: flex;
   justify-content: space-between;
 }
@@ -278,12 +278,24 @@ export default {
 .taskInformation__container {
   display: flex;
   align-items: center;
-  width: 95%;
+  width: 100%;
   justify-content: space-between;
 
   @media screen and (min-width: 450px) {
     justify-content: space-between;
     width: 80%;
+  }
+}
+
+.taskCompletedAndName__container {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  @media screen and (min-width: 430px) {
+    width: 65%;
+  }
+  @media screen and (min-width: 630px) {
+    width: 50%;
   }
 }
 
@@ -295,9 +307,13 @@ export default {
 .taskName {
   border: none;
   outline: none;
-  width: 80px;
+  width: 95%;
   &:focus {
     border-bottom: 1px solid black;
+  }
+  @media screen and (min-width: 270px) {
+    display: block;
+    width: 100%;
   }
   @media screen and (min-width: 500px) {
   }
@@ -307,6 +323,7 @@ export default {
   border: none;
   outline: none;
   display: none;
+  width: 25%;
   &:focus {
     border-bottom: 1px solid black;
   }
@@ -329,15 +346,22 @@ export default {
 
 .taskPriority {
   display: none;
-  @media screen and (min-width: 270px) {
+  width: 80px;
+  @media screen and (min-width: 430px) {
     display: block;
+  }
+  @media screen and (min-width: 350px) {
+    width: 80px;
+  }
+  @media screen and (min-width: 630px) {
+    width: 20%;
   }
 }
 
 .taskPriorityMobile {
   display: block;
   margin: 10px 0;
-  @media screen and (min-width: 270px) {
+  @media screen and (min-width: 430px) {
     display: none;
   }
 }
@@ -369,7 +393,7 @@ button {
     border: 1px solid #ffffff;
   }
 
-  @media screen and(min-width: 460px) {
+  @media screen and(min-width: 480px) {
     width: 30px;
   }
 }

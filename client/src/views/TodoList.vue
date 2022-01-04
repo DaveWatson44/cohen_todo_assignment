@@ -20,9 +20,10 @@
     <div class="header"></div>
     <todo-list
       :reloadTodoList="reloadTodoList"
-      :resetReloadTodoListEmitted="resetReloadTodoList"
       class="todoList"
+      @resetReloadTodoListEmitted="resetReloadTodoList"
       @showDeleteTodoEmitted="initTodoDeletion"
+      @showAlertEmitted="showTodoAlert"
     ></todo-list>
   </div>
 </template>
@@ -76,7 +77,6 @@ export default {
         })
         .then((resp) => {
           console.log(resp.data);
-          this.todo = {};
           this.reloadTodoList = true;
           this.showDeleteTodoAlert = !this.showDeleteTodoAlert;
         })

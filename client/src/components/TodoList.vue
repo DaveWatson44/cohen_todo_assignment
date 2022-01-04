@@ -56,7 +56,7 @@
 <script>
 export default {
   props: { reloadTodoList: Boolean },
-  mounted() {
+  created() {
     this.getTodos();
   },
 
@@ -91,7 +91,7 @@ export default {
   },
 
   methods: {
-     emitShowAlert(payload) {
+    emitShowAlert(payload) {
       this.$emit("showAlertEmitted", {
         alertTextColor: payload.alertTextColor,
         alertBgColor: payload.alertBgColor,
@@ -99,7 +99,6 @@ export default {
       });
     },
     getTodos() {
-      console.log("getting todos");
       this.$axios
         .get("/todos_info")
         .then((resp) => {
@@ -130,7 +129,6 @@ export default {
       this.showNameTakenError = false;
       this.showExceedsLengthError = false;
       this.showNoNameError = false;
-      console.log()
       if (this.canSubmit) {
         this.$axios
           .post("/todo_lists", { name: this.newTodoName })
@@ -149,11 +147,11 @@ export default {
           this.showNoNameError = !this.showNoNameError;
         } else if (this.newTodoName.length > 50) {
           this.showExceedsLengthError = !this.showExceedsLengthError;
-        } else{
-          console.log('something else is wrong')
-          console.log(this.showNoNameError)
-          console.log(this.showExceedsLengthError)
-          console.log(this.showNameTakenError)
+        } else {
+          this.emitShowAlert({
+              alertMessage:
+                "Error adding todo. Please refresh the page and try again.",
+            });
         }
       }
     },
@@ -175,7 +173,10 @@ export default {
           })
           .catch((err) => {
             console.log(err);
-            this.emitShowAlert({alertMessage: "Cannot delete. Please refresh the page and try again."});
+            this.emitShowAlert({
+              alertMessage:
+                "Cannot delete. Please refresh the page and try again.",
+            });
           });
       }
     },

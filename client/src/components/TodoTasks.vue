@@ -31,7 +31,7 @@ import TodoTask from "@/components/TodoTask.vue";
 export default {
   components: { TodoTask },
   props: { todoListId: String },
-  mounted() {
+  created() {
     this.getTasks();
   },
 

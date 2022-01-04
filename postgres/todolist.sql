@@ -62,7 +62,7 @@ ALTER SEQUENCE public.projects_id_seq OWNED BY public.todo_lists.id;
 CREATE TABLE public.tasks (
     id integer NOT NULL,
     todo_list_id integer NOT NULL,
-    name character varying(255) NOT NULL,
+    name character varying(50) NOT NULL,
     description character varying(255) NOT NULL,
     due_date date NOT NULL,
     priority character varying(50) NOT NULL,
@@ -113,8 +113,6 @@ ALTER TABLE ONLY public.todo_lists ALTER COLUMN id SET DEFAULT nextval('public.p
 --
 
 COPY public.tasks (id, todo_list_id, name, description, due_date, priority, is_completed) FROM stdin;
-4	1	name4	desc4	2021-12-15	High	t
-1	1	Test	Test	2021-12-18	High	f
 \.
 
 
@@ -123,7 +121,6 @@ COPY public.tasks (id, todo_list_id, name, description, due_date, priority, is_c
 --
 
 COPY public.todo_lists (id, name, is_completed) FROM stdin;
-1	Groceries	f
 \.
 
 
@@ -131,14 +128,14 @@ COPY public.todo_lists (id, name, is_completed) FROM stdin;
 -- Name: projects_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.projects_id_seq', 57, true);
+SELECT pg_catalog.setval('public.projects_id_seq', 88, true);
 
 
 --
 -- Name: tasks_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.tasks_id_seq', 1, true);
+SELECT pg_catalog.setval('public.tasks_id_seq', 26, true);
 
 
 --
