@@ -173,8 +173,7 @@ export default {
     updateTask(task) {
       this.$axios
         .put("/tasks", task)
-        .then((resp) => {
-          console.log(resp);
+        .then(() => {
           this.$emit("getTasksEmitted");
           this.isDisabled = true;
           this.showDetails = false;
@@ -196,8 +195,7 @@ export default {
       } else {
         this.$axios
           .delete("/tasks", { params: { id: taskId } })
-          .then((resp) => {
-            console.log(resp);
+          .then(() => {
             this.$emit("getTasksEmitted");
           })
           .catch((err) => {
@@ -235,10 +233,8 @@ export default {
             priority: task.priority,
             isCompleted: task.isCompleted,
           })
-          .then((resp) => {
-            console.log(resp.data);
+          .then(() => {
             this.$emit("taskAddedEmitted");
-
             this.$nextTick(() => {
               this.$refs.taskName.focus();
             });

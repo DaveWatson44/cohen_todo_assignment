@@ -75,8 +75,7 @@ export default {
             tasks: this.todo.tasks,
           },
         })
-        .then((resp) => {
-          console.log(resp.data);
+        .then(() => {
           this.reloadTodoList = true;
           this.showDeleteTodoAlert = !this.showDeleteTodoAlert;
         })
