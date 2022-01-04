@@ -132,8 +132,7 @@ export default {
       if (this.canSubmit) {
         this.$axios
           .post("/todo_lists", { name: this.newTodoName })
-          .then((resp) => {
-            console.log(resp.data);
+          .then(() => {
             this.addNewTodo = !this.addNewTodo;
             this.getTodos();
             this.newTodoName = "";
@@ -167,8 +166,7 @@ export default {
               tasks: todo.tasks,
             },
           })
-          .then((resp) => {
-            console.log(resp.data);
+          .then(() => {
             this.getTodos();
           })
           .catch((err) => {
