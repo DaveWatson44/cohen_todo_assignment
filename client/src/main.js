@@ -13,7 +13,6 @@ import {
   faSort
 } from "@fortawesome/free-solid-svg-icons";
 
-
 library.add(faTrashAlt);
 library.add(faEdit);
 library.add(faPlus);

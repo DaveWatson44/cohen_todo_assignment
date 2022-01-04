@@ -38,7 +38,6 @@ export default {
 
 <style lang="scss" scoped>
 .todoAlert__container {
-  // height: 60px;
   width: 90%;
   position: absolute;
   margin-right: auto;

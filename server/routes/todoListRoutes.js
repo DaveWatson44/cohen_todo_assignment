@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const pg = require('../db/postgresquery');
-const { createTodoListsSQL, getTodoListsSQL, updateTodoListSQL, deleteTodoListSQL, getTodoListAndTasksSQL, updateTodosSQL } = require('../utils/todoListQueries');
-const { getTasksSQL, deleteTodoTasksSQL } = require('../utils/tasksQueries');
+const { createTodoListsSQL, getTodoListsSQL, deleteTodoListSQL, updateTodosSQL } = require('../utils/todoListQueries');
+const { deleteTodoTasksSQL } = require('../utils/tasksQueries');
 const TodoList = require('../blueprints/todoList');
 
 router.get('/todo_lists', async (req, res, next) => {

@@ -1,4 +1,3 @@
-// const { createTodoListsSQL, getTodoListsSQL, updateTodoListSQL, deleteTodoListSQL, getTodoListAndTasksSQL } = require('../utils/todoListQueries');
 const { getTasksSQL, getCompletedTasksSQL } = require('../utils/tasksQueries');
 const pg = require('../db/postgresquery');
 
