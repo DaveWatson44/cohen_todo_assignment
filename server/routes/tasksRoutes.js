@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const pg = require('../db/postgresquery');
 const { createTaskSQL, getTasksSQL, updateTaskSQL, deleteTaskSQL } = require('../utils/tasksQueries');
+const taskExistsCheck = require('../utils/taskExistsCheck');
 
 router.get('/tasks', async (req, res, next) => {
 	const sql = getTasksSQL();
@@ -26,25 +27,36 @@ router.post('/tasks', async (req, res, next) => {
 	const values = [req.body.todoListId, req.body.name, req.body.description, req.body.dueDate, req.body.priority, req.body.isCompleted];
 	let message = '';
 
-	try {
-		await pg.query(sql, values)
-		message = "Task added successfully.";
-		res.status(200).send({ message: message });
-	} catch (err) {
-		if (err.code == '23505') {
-			message = "Task name already exists.";
-			console.log(err)
-			res.status(400).send({
-				message: message
-			})
-		} else {
-			message = "There was an error adding the record. Please make sure the task name doesn't already exist.";
-			console.log(err)
-			res.status(400).send({
-				message: message
-			})
+	let taskExists = await taskExistsCheck(req.body.name, req.body.todoListId);
+
+	if(taskExists){
+		message = "This name already exists in this todo list.";
+				res.status(400).send({
+					message: message
+				});
+	} else{
+		try {
+			await pg.query(sql, values)
+			message = "Task added successfully.";
+			res.status(200).send({ message: message });
+		} catch (err) {
+			if (err.code == '23505') {
+				message = "Task name already exists.";
+				console.log(err)
+				res.status(400).send({
+					message: message
+				})
+			} else {
+				message = "There was an error adding the record.";
+				console.log(err)
+				res.status(400).send({
+					message: message
+				});
+			}
 		}
 	}
+
+	
 });
 
 router.put('/tasks', async (req, res, next) => {

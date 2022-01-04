@@ -128,14 +128,14 @@ COPY public.todo_lists (id, name, is_completed) FROM stdin;
 -- Name: projects_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.projects_id_seq', 88, true);
+SELECT pg_catalog.setval('public.projects_id_seq', 89, true);
 
 
 --
 -- Name: tasks_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.tasks_id_seq', 26, true);
+SELECT pg_catalog.setval('public.tasks_id_seq', 42, true);
 
 
 --
