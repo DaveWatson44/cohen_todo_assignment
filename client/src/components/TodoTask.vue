@@ -6,7 +6,7 @@
           <input
             type="checkbox"
             v-model="task.isCompleted"
-            @change.stop="updateTask(task)"
+            @change="updateTask(task)"
             class="taskField taskIsCompleted"
             @click="stopProp"
           />
